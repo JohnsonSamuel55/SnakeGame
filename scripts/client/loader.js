@@ -9,7 +9,7 @@ MyGame = {
 MyGame.loader = (function() {
     'use strict';
     let scriptOrder = [{
-            scripts: ['game'],
+            scripts: ['gameloop'],
             message: 'Gameplay model loaded',
             onComplete: null
         }],
