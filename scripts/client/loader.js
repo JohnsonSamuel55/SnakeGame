@@ -8,13 +8,30 @@ MyGame = {
 
 MyGame.loader = (function() {
     'use strict';
-    let scriptOrder = [{
+
+    //Used to load scripts for the client
+    let scriptOrder = [
+        {
+            scripts: ['../shared/network-ids'],
+            message: 'Network Ids loaded',
+            onComplete: null,
+        }, {
+            scripts: ['../shared/queue'],
+            message: 'Utilities loaded',
+            onComplete: null,
+        }, {
+            scripts: ['input'],
+            message: 'Input loaded',
+            onComplete: null
+        }, {
             scripts: ['gameloop'],
             message: 'Gameplay model loaded',
             onComplete: null
         }],
-        assetOrder = [];
 
+        //Used to load assets for the client
+        assetOrder = [];
+    
     function loadScripts(scripts, onComplete) {
         //
         // When we run out of things to load, that is when we call onComplete.
