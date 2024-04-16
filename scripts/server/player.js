@@ -1,6 +1,7 @@
 MyGame.server.Player = function(spec) {
   'use strict'
 
+  let random = required("../shared/random");
   let circles = [];
   let id = spec.id;
   let size = spec.size;
@@ -10,9 +11,10 @@ MyGame.server.Player = function(spec) {
   let isInvinsible = true;
   let invinsibleTimer = 2000;
 
-  function spawn(position) {
+  function spawn() {
+    let center = {x: random.nextDouble(), y: random.nextDouble()};
     circles.push({
-        center: {x: position.center.x, y: position.center.y},
+        center: {x: center.x, y: center.y},
         type: MyGame.CircleTypes.HEAD,
         turnPoints: [],
         direction: MyGame.directions.EAST,
@@ -20,7 +22,7 @@ MyGame.server.Player = function(spec) {
       });
     for (let i = 1; i < 4; i++) {
       circles.push({
-        center: {x: position.center.x - size * i, y: position.center.y},
+        center: {x: center.x - size * i, y: center.y},
         type: MyGame.CircleTypes.BODY,
         turnPoints: [],
         direction: MyGame.directions.EAST,
@@ -28,7 +30,7 @@ MyGame.server.Player = function(spec) {
       });
     }
     circles.push({
-      center: {x: position.center.x - size * i, y: position.center.y},
+      center: {x: center.x - size * i, y: center.y},
       type: MyGame.CircleTypes.TAIL,
       turnPoints: [],
       direction: MyGame.directions.EAST,
@@ -73,7 +75,9 @@ MyGame.server.Player = function(spec) {
     update,
     spawn,
     get score() { return score; },
-    get circles() { return circles; }
+    get circles() { return circles; },
+    get id() { return id; },
+    set id(value) { id = value; }
   }
 
 }

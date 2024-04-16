@@ -6,6 +6,9 @@ let Queue = require('../shared/queue.js')
 
 
 const SIMULATION_UPDATE_RATE_MS = 50;
+const STATE_UPDATE_RATE_MS = 100;
+let food = [];
+let newFood = [];
 let quit = false;
 let lastUpdate = 0;
 let activeClients = {};
@@ -24,6 +27,7 @@ function processInput(elapsedTime) {
         let client = activeClients[input.clientId];
         client.lastMessageId = input.message.id;
         switch (input.message.type) {
+            
         }
     }
 }
@@ -67,11 +71,15 @@ function initializeSocketIO(httpServer) {
             let client = activeClients[clientId];
             if (newPlayer.clientId !== clientId) {
                 client.socket.emit(NetworkIds.CONNECT_OTHER, {
-                    clientId: newPlayer.clientId
+                    clientId: newPlayer.clientId,
+                    circles: newPlayer.circles,
+                    alive: true
                 });
 
                 socket.emit(NetworkIds.CONNECT_OTHER, {
-                    clientId: client.player.clientId
+                    clientId: client.player.clientId,
+                    circles: client.player.circles,
+                    alive: client.player.alive
                 });
             }
         }
@@ -92,9 +100,9 @@ function initializeSocketIO(httpServer) {
         console.log('Connection established: ', socket.id);
   
         // Create an entry in our list of connected clients
-        let newPlayer = { 
-            clientId: socket.id
-        }
+        
+        let newPlayer = MyGame.server.Player()
+        newPlayer.id = socket.id;
         activeClients[socket.id] = {
             socket: socket,
             player: newPlayer

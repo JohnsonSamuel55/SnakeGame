@@ -16,20 +16,36 @@
             value: 'input',
             writable: false
         },
-        'INPUT_MOVE': {
-            value: 'move',
+        'INPUT_EAST': {
+            value: 'turn-east',
             writable: false
         },
-        'INPUT_ROTATE_LEFT': {
-            value: 'rotate-left',
+        'INPUT_NORTHEAST': {
+            value: 'turn-northeast',
             writable: false
         },
-        'INPUT_ROTATE_RIGHT': {
-            value: 'rotate-right',
+        'INPUT_NORTH': {
+            value: 'turn-north',
             writable: false
         },
-        'INPUT_FIRE': {
-            value: 'fire',
+        'INPUT_NORTHWEST': {
+            value: 'turn-northwest',
+            writable: false
+        },
+        'INPUT_WEST': {
+            value: 'turn-west',
+            writable: false
+        },
+        'INPUT_SOUTHWEST': {
+            value: 'turn-southwest',
+            writable: false
+        },
+        'INPUT_SOUTH': {
+            value: 'turn-south',
+            writable: false
+        },
+        'INPUT_SOUTHEAST': {
+            value: 'turn-southeast',
             writable: false
         },
         'CONNECT_ACK': {
@@ -52,12 +68,12 @@
             value: 'update-other',
             writable: false
         },
-        'MISSILE_NEW': {
-            value: 'missile-new',
+        'ADD_TURNPOINT': {
+            value: 'add-turnpoint',
             writable: false
         },
-        'MISSILE_HIT': {
-            value: 'missile-hit',
+        'UPDATE_DEATH': {
+            value: 'update-death',
             writable: false
         }
     });

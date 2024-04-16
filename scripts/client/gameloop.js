@@ -10,7 +10,10 @@ MyGame.main = (function(graphics, renderer, input, components) {
       socket = io(),
       myKeyboard = input.Keyboard(),
       playerOthers = {},
-      playerSelf = {},
+      playerSelf = {
+        model: components.Snake(),
+        textures: [MyGame.assets['head'], MyGame.assets['body'], MyGame.assets['tail']]
+      },
       messageHistory = Queue.create(),
       messageId = 1,
       networkQueue = Queue.create();
@@ -50,17 +53,43 @@ MyGame.main = (function(graphics, renderer, input, components) {
     });
   });
 
+  socket.on(NetworkIds.UPDATE_DEATH, data => {
+    networkQueue.enqueue({
+      type: NetworkIds.UPDATE_DEATH,
+      data: data
+    });
+  });
+
+  socket.on(NetworkIds.ADD_TURNPOINT, data => {
+    networkQueue.enqueue({
+      type: NetworkIds.ADD_TURNPOINT,
+      data: data
+    });
+  });
+
   function connectPlayerSelf(data){
     console.log("Self Connected");
-    //Setup player self's model from server data
+    playerSelf.circles = data.circles;
+    playerSelf.id = data.clientId;
+    playerSelf.alive = true;
   }
 
   function connectPlayerOther(data){
     console.log("Other Player Connected");
+    let model = components.SnakeRemote();
+    model.state.circles = data.circles;
+    model.state.alive = true;
+    model.state.lastUpdate = performance.now();
 
+    model.goal.circles = data.circles;
+    model.goal.alive = true;
+    model.goal.updateWindow = 0;
     //Setup other player's model from data and save it in
     //the playerOthers array
-    playerOthers[data.clientId] = "Connected";
+    playerOthers[data.clientId] = {
+      model: model,
+      textures: [MyGame.assets['head'], MyGame.assets['body'], MyGame.assets['tail']]
+    };
   }
 
   function disconnectPlayerOther(data){
@@ -69,13 +98,28 @@ MyGame.main = (function(graphics, renderer, input, components) {
     delete playerOthers[data.clientId];
   }
 
-  function updatePlayerSelf(data){
+  function updatePlayerTurnPoints(data){
+    if (data.clientId == playerSelf.id) {
+      playerSelf.addTurnPoint(data.turnPoint);
+    }
+    else {
+      playerOthers[data.clientId].addTurnPoint(data.turnPoint);
+    }
     //Update the self player based on data from the server
   }
 
   function updatePlayerOther(data){
     //Check that the player is in the playerOthers array
     //Then update based on data from server
+  }
+
+  function updatePlayerDeath(data) {
+    if (data.id == playerSelf.clientId) {
+      playerSelf.alive = false;
+    }
+    else {
+      playerOthers[data.clientId].alive = false;
+    }
   }
   
   function processInput(elapsedTime) {
@@ -101,6 +145,12 @@ MyGame.main = (function(graphics, renderer, input, components) {
                 break;
             case NetworkIds.UPDATE_OTHER:
                 updatePlayerOther(message.data);
+                break;
+            case NetworkIds.UPDATE_DEATH:
+                updatePlayerDeath(message.data);
+                break;
+            case NetworkIds.ADD_TURNPOINT:
+                updatePlayerTurnPoints(message.data);
                 break;
         }
     }

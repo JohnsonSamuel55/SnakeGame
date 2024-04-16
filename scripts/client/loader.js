@@ -1,7 +1,7 @@
 MyGame = {
     input: {},
     components: {},
-    renderer: {},
+    renderers: {},
     utilities: {},
     assets: {}
 };
