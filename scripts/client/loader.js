@@ -24,6 +24,18 @@ MyGame.loader = (function() {
             message: 'Input loaded',
             onComplete: null
         }, {
+            scripts: ['../shared/circle-types', '../shared/random', '../shared/turn-point', '../shared/directions'],
+            message: 'Shared functionality loaded',
+            onComplete: null
+        }, {
+            scripts: ['components/snake', 'components/circle', 'components/snake-remote'],
+            message: 'Components loaded',
+            onComplete: null
+        }, {
+            scripts: ['render/graphics', 'render/snake'],
+            message: 'Rendering loaded',
+            onComplete: null
+        }, {
             scripts: ['gameloop'],
             message: 'Gameplay model loaded',
             onComplete: null
