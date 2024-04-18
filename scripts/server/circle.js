@@ -1,4 +1,6 @@
-MyGame.server.Circle = function(spec) {
+'use strict';
+
+function circle(spec) {
   let center = {x: spec.center.x, y: spec.center.y};
   let turnPoints = spec.turnPoints;
   let type = spec.type;
@@ -23,3 +25,5 @@ MyGame.server.Circle = function(spec) {
     get type() { return type; }
   }
 }
+
+module.exports.create = (spec) => circle(spec)

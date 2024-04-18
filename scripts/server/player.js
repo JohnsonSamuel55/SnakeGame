@@ -1,13 +1,19 @@
-MyGame.server.Player = function(spec) {
+'use strict';
+
+let CircleTypes = require('../shared/circle-types');
+let Directions = require('../shared/directions');
+let Circle = require('./circle');
+
+function createPlayer() {
   'use strict'
 
   let random = required("../shared/random");
   let circles = [];
-  let id = spec.id;
-  let size = spec.size;
+  let id = null;
+  let size = 0.0005;
   let name = "";
   let score = 0;
-  let pointsToIncreaseCircleCount = spec.pointsToIncrease;
+  let pointsToIncreaseCircleCount = 10;
   let isInvinsible = true;
   let invinsibleTimer = 2000;
 
@@ -15,25 +21,25 @@ MyGame.server.Player = function(spec) {
     let center = {x: random.nextDouble(), y: random.nextDouble()};
     circles.push({
         center: {x: center.x, y: center.y},
-        type: MyGame.CircleTypes.HEAD,
+        type: CircleTypes.HEAD,
         turnPoints: [],
-        direction: MyGame.directions.EAST,
+        direction: Directions.EAST,
         speed: 0.01
       });
     for (let i = 1; i < 4; i++) {
       circles.push({
         center: {x: center.x - size * i, y: center.y},
-        type: MyGame.CircleTypes.BODY,
+        type: CircleTypes.BODY,
         turnPoints: [],
-        direction: MyGame.directions.EAST,
+        direction: Directions.EAST,
         speed: 0.01
       });
     }
     circles.push({
       center: {x: center.x - size * i, y: center.y},
-      type: MyGame.CircleTypes.TAIL,
+      type: CircleTypes.TAIL,
       turnPoints: [],
-      direction: MyGame.directions.EAST,
+      direction: Directions.EAST,
       speed: 0.01
     });
     isInvinsible = true;
@@ -49,13 +55,13 @@ MyGame.server.Player = function(spec) {
       let previousCircle = circles[circles.length - 1];
       let newCircle = {
         center: {x: previousCircle.center.x - Math.cos(previousCircle.direction) * size, y: previousCircle.center.y - Math.sin(previousCircle.direction) * size},
-        type: MyGame.CircleTypes.TAIL,
+        type: CircleTypes.TAIL,
         turnPoints: previousCircle.turnPoints,
         direction: previousCircle.direction,
         speed: 0.01
       };
-      previousCircle.setType(MyGame.CircleTypes.BODY);
-      circles.push(MyGame.server.Circle(newCircle));
+      previousCircle.setType(CircleTypes.BODY);
+      circles.push(Circle.create(newCircle));
     }
   }
 
@@ -79,5 +85,6 @@ MyGame.server.Player = function(spec) {
     get id() { return id; },
     set id(value) { id = value; }
   }
-
 }
+
+module.exports.create = () => createPlayer();

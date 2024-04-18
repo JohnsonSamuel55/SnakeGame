@@ -2,8 +2,11 @@
 
 let present = require('present');
 let NetworkIds = require("../shared/network-ids");
-let Queue = require('../shared/queue.js')
-
+let Queue = require('../shared/queue.js');
+let Player = required('./player');
+let Circle = required('./circle');
+let Food = required('./food')
+let Directions = required('../shared/directions')
 
 const SIMULATION_UPDATE_RATE_MS = 50;
 const STATE_UPDATE_RATE_MS = 100;
@@ -101,7 +104,7 @@ function initializeSocketIO(httpServer) {
   
         // Create an entry in our list of connected clients
         
-        let newPlayer = MyGame.server.Player()
+        let newPlayer = Player.create()
         newPlayer.id = socket.id;
         activeClients[socket.id] = {
             socket: socket,
