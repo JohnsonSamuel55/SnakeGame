@@ -1,6 +1,5 @@
-'use strict'
-
 (function(exports) {
+  'use strict'
   Object.defineProperties(exports, {
     "MAPLE": {
       value: 0,

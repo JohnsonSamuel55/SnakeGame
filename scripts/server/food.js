@@ -1,9 +1,8 @@
-'use strict'
-
 let random = require('../shared/random');
 let Food = require('../shared/food-types');
 
 function createFood(foodId) {
+  'use strict';
   let that = {};
   let center = {x: random.nextDouble(), y: random.nextDouble()};
   let type;

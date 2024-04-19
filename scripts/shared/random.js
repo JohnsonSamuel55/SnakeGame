@@ -81,8 +81,12 @@ function nextGaussian(mean, stdDev) {
 
     return mean + y1 * stdDev;
 }
-
-module.exports.nextDouble = nextDouble;
-module.exports.nextRange = nextRange;
-module.exports.nextCircleVector = nextCircleVector;
-module.exports.nextGaussian = nextGaussian;
+if(typeof exports !== 'undefined'){
+    module.exports.nextDouble = nextDouble;
+    module.exports.nextRange = nextRange;
+    module.exports.nextCircleVector = nextCircleVector;
+    module.exports.nextGaussian = nextGaussian;
+}
+else{
+    
+}
