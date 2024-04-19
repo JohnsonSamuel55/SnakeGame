@@ -1,6 +1,8 @@
-'use strict';
+
 
 (function(exports) {
+  'use strict';
+
   Object.defineProperties(exports, {
     "HEAD": {
       value: 0,

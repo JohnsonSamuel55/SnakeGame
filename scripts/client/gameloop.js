@@ -7,7 +7,6 @@ MyGame.main = (function(graphics, renderer, input, components) {
   'use strict';
 
   let lastTimeStamp = performance.now(),
-      socket = io(),
       myKeyboard = input.Keyboard(),
       playerOthers = {},
       playerSelf = {
@@ -16,6 +15,7 @@ MyGame.main = (function(graphics, renderer, input, components) {
       },
       messageHistory = Queue.create(),
       messageId = 1,
+      socket = io(),
       networkQueue = Queue.create();
 
   socket.on(NetworkIds.CONNECT_ACK, data => {

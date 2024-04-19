@@ -1,12 +1,10 @@
-'use strict';
-
 let present = require('present');
 let NetworkIds = require("../shared/network-ids");
 let Queue = require('../shared/queue.js');
-let Player = required('./player');
-let Circle = required('./circle');
-let Food = required('./food')
-let Directions = required('../shared/directions')
+let Player = require('./player');
+let Circle = require('./circle');
+let Food = require('./food')
+let Directions = require('../shared/directions')
 
 const SIMULATION_UPDATE_RATE_MS = 50;
 const STATE_UPDATE_RATE_MS = 100;

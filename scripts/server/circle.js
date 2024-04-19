@@ -1,6 +1,6 @@
-'use strict';
-
 function circle(spec) {
+  'use strict';
+  
   let center = {x: spec.center.x, y: spec.center.y};
   let turnPoints = spec.turnPoints;
   let type = spec.type;

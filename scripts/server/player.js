@@ -1,13 +1,11 @@
-'use strict';
-
 let CircleTypes = require('../shared/circle-types');
 let Directions = require('../shared/directions');
 let Circle = require('./circle');
 
 function createPlayer() {
-  'use strict'
+  'use strict';
 
-  let random = required("../shared/random");
+  let random = require("../shared/random");
   let circles = [];
   let id = null;
   let size = 0.0005;

@@ -1,6 +1,6 @@
-'use strict';
-
 (function(exports) {
+  'use strict';
+  
   Object.defineProperties(exports, {
     "EAST": {
       value: 0,
