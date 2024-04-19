@@ -14,10 +14,10 @@
     highScoresButton.addEventListener("click", handleHighScoresButtonClick);
 
     var controlsButton = document.getElementById("controlsButton");
-  	controlsButton.addEventListener("click", handleStartButtonClick);
+  	controlsButton.addEventListener("click", handleControlsButtonClick);
 
     var creditsButton = document.getElementById("creditsButton");
-  	creditsButton.addEventListener("click", handleStartButtonClick);
+  	creditsButton.addEventListener("click", handleCreditsButtonClick);
 
     function handleHighScoresButtonClick() {
 
@@ -28,8 +28,32 @@
     }
 
     function handleCreditsButtonClick() {
-        
-    }
+		// Hide the main menu
+		document.getElementById("mainMenu").style.display = "none";
+		
+		// Display the credits screen
+		var creditsScreen = document.getElementById("creditsScreen");
+		creditsScreen.style.display = "block";
+	
+		// Function to handle the escape key press
+		function handleKeyPress(event) {
+			if (event.keyCode === 27) { // Check if the pressed key is the Escape key
+				// Hide the credits screen
+				creditsScreen.style.display = "none";
+	
+				// Show the main menu again
+				document.getElementById("mainMenu").style.display = "block";
+	
+				// Remove the event listener
+				document.removeEventListener("keydown", handleKeyPress);
+			}
+		}
+	
+		// Add event listener for keydown event
+		document.addEventListener("keydown", handleKeyPress);
+	}
+	
+	
 
 	// Function to handle the start button click
 	function handleStartButtonClick() {
