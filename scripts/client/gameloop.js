@@ -16,7 +16,8 @@ MyGame.main = (function(graphics, renderer, input, components) {
       messageHistory = Queue.create(),
       messageId = 1,
       socket = io(),
-      networkQueue = Queue.create();
+      networkQueue = Queue.create(),
+      food = {};
 
   socket.on(NetworkIds.CONNECT_ACK, data => {
     networkQueue.enqueue({
@@ -72,6 +73,8 @@ MyGame.main = (function(graphics, renderer, input, components) {
     playerSelf.circles = data.circles;
     playerSelf.id = data.clientId;
     playerSelf.alive = true;
+
+    food = data.food;
   }
 
   function connectPlayerOther(data){
