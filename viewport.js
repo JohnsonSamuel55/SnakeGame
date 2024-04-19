@@ -412,6 +412,6 @@ window.addEventListener("keydown", function(e) {
 	// -->
 
 	// start the game when page is loaded
-	window.onload = function() {
+	/*window.onload = function() {
 	  Game.play();
-	}
+	}*/

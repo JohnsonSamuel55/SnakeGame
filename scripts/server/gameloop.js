@@ -139,8 +139,9 @@ function initializeSocketIO(httpServer) {
             player: newPlayer
         };
         socket.emit(NetworkIds.CONNECT_ACK, {
+            clientId: socket.id,
             circles: newPlayer.circles,
-            clientId: newPlayer.id
+            food: food
         });
 
         socket.on(NetworkIds.INPUT, data => {
