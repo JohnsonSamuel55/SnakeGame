@@ -88,5 +88,9 @@ if(typeof exports !== 'undefined'){
     module.exports.nextGaussian = nextGaussian;
 }
 else{
-    
+    this['random'] = {};
+    this['nextDouble'] = {};
+    this['nextRange'] = {};
+    this['nextCircleVector'] = {};
+    this['nextGaussian'] = {};
 }

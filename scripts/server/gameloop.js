@@ -28,7 +28,22 @@ function processInput(elapsedTime) {
         let client = activeClients[input.clientId];
         client.lastMessageId = input.message.id;
         switch (input.message.type) {
-            
+            case NetworkIds.INPUT_EAST: 
+                break;
+            case NetworkIds.INPUT_NORTHEAST:
+                break;
+            case NetworkIds.INPUT_NORTH:
+                break;
+            case NetworkIds.INPUT_NORTHWEST:
+                break;
+            case NetworkIds.INPUT_WEST:
+                break;
+            case NetworkIds.INPUT_SOUTHWEST:
+                break;
+            case NetworkIds.INPUT_SOUTH:
+                break;
+            case NetworkIds.INPUT_SOUTHEAST:
+                break;
         }
     }
 }
@@ -42,11 +57,6 @@ function update(elapsedTime, currentTime) {
 
 function updateClients(elapsedTime) {
     
-    /*This will require an update in how our player module is stored and loaded before it can be implemented.
-        Right now the player object for the server is stored in the myGame object, but only the client can access the myGame object
-        Instead we should have a player module that gets saved as a model on the player object on the server for each client 
-        and those player models are updated by the server and client.*/
-
 }
 
 
@@ -129,6 +139,7 @@ function initializeSocketIO(httpServer) {
 }
 
 function initialize(httpServer) {
+    activeClients = {};
     initializeSocketIO(httpServer);
     gameLoop(present(), 0);
 }

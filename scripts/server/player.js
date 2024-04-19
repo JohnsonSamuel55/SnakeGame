@@ -14,6 +14,7 @@ function createPlayer() {
   let pointsToIncreaseCircleCount = 10;
   let isInvinsible = true;
   let invinsibleTimer = 2000;
+  let alive = true;
 
   function spawn() {
     let center = {x: random.nextDouble(), y: random.nextDouble()};
@@ -81,7 +82,9 @@ function createPlayer() {
     get score() { return score; },
     get circles() { return circles; },
     get id() { return id; },
-    set id(value) { id = value; }
+    set id(value) { id = value; },
+    get alive() { return alive; },
+    set alive(value) { alive = value }
   }
 }
 
