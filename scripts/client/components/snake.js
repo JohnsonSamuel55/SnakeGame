@@ -2,7 +2,7 @@ MyGame.components.Snake = function() {
   'use state'
   let that = {};
   let circles = [];
-  let id = spec.id;
+  let id;
   let alive = true;
   let size = 0.01;
 
