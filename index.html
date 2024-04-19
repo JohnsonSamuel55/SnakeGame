@@ -22,6 +22,21 @@
         <p>Levi Nielson</p>
         <p>Wil Stika</p>
     </div>
+    <div id="controlsScreen" style="display: none;">
+        <h2>Edit Controls</h2>
+        <label for="leftKey">Left:</label>
+        <input type="text" id="leftKey" class="control-key-input" readonly onclick="setControlKey('leftKey')"><br>
+        <label for="upKey">Up:</label>
+        <input type="text" id="upKey" class="control-key-input" readonly onclick="setControlKey('upKey')"><br>
+        <label for="rightKey">Right:</label>
+        <input type="text" id="rightKey" class="control-key-input" readonly onclick="setControlKey('rightKey')"><br>
+        <label for="downKey">Down:</label>
+        <input type="text" id="downKey" class="control-key-input" readonly onclick="setControlKey('downKey')"><br>
+        <label for="pauseKey">Pause:</label>
+        <input type="text" id="pauseKey" class="control-key-input" readonly onclick="setControlKey('pauseKey')"><br>
+        <button id="saveControlsButton">Save</button>
+    </div>
+    
     <script data-main="scripts/client/loader" src="scripts/client/require.js"></script>
     <script src="viewport.js"></script>
     <script src="scripts/client/mainMenu.js"></script>
