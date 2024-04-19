@@ -8,8 +8,9 @@ let Directions = require('../shared/directions')
 
 const SIMULATION_UPDATE_RATE_MS = 50;
 const STATE_UPDATE_RATE_MS = 100;
-let food = [];
-let newFood = [];
+const MAX_FOOD = 150;
+let food = {};
+let newFood = {};
 let quit = false;
 let lastUpdate = 0;
 let activeClients = {};
@@ -141,6 +142,9 @@ function initializeSocketIO(httpServer) {
 function initialize(httpServer) {
     activeClients = {};
     initializeSocketIO(httpServer);
+    for (let i = 0; i < MAX_FOOD; i++) {
+        food[i] = Food.create(i);
+    }
     gameLoop(present(), 0);
 }
 

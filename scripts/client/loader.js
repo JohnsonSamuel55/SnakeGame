@@ -42,7 +42,19 @@ MyGame.loader = (function() {
         }],
 
         //Used to load assets for the client
-        assetOrder = [];
+        assetOrder = [{
+            key: 'head',
+            source: 'assets/textures/head.png'
+        }, {
+            key: 'body',
+            source: 'assets/textures/body.png'
+        }, {
+            key: 'tail',
+            source: 'assets/textures/tail.png'
+        }, {
+            key: 'food',
+            source: 'assets/textures/food.png'
+        }];
     
     function loadScripts(scripts, onComplete) {
         //
