@@ -54,10 +54,30 @@ function collided(obj1, obj2){
 }
 
 function update(elapsedTime, currentTime) {
+    for(let clientId in activeClients){
+        activeClients[clientId].player.update(currentTime);
+    }
 }
 
 function updateClients(elapsedTime) {
-    
+    for(let clientId in activeClients){
+        let client = activeClients[clientId];
+        let update = {
+            clientId: clientId,
+            lastMessageId: client.lastMessageId,
+            player: client.player,
+            updateWindow: lastUpdate
+        };
+        if(client.player.reportUpdate){
+            client.socket.emit(NetworkIds.UPDATE_SELF, update);
+
+            for(let otherId in activeClients){
+                if(otherId !== clientId){
+                    activeClients[otherId].socket.emit(NetworkIds.UPDATE_OTHER, update);
+                }
+            }
+        }
+    }
 }
 
 
@@ -81,17 +101,16 @@ function initializeSocketIO(httpServer) {
     function notifyConnect(socket, newPlayer) {
         for (let clientId in activeClients) {
             let client = activeClients[clientId];
-            if (newPlayer.clientId !== clientId) {
+            if (newPlayer.id !== clientId) {
                 client.socket.emit(NetworkIds.CONNECT_OTHER, {
-                    clientId: newPlayer.clientId,
+                    clientId: newPlayer.id,
                     circles: newPlayer.circles,
                     alive: true
                 });
 
                 socket.emit(NetworkIds.CONNECT_OTHER, {
-                    clientId: client.player.clientId,
-                    circles: client.player.circles,
-                    alive: client.player.alive
+                    clientId: client.player.id,
+                    circles: client.player.circles
                 });
             }
         }
@@ -113,14 +132,15 @@ function initializeSocketIO(httpServer) {
   
         // Create an entry in our list of connected clients
         
-        let newPlayer = Player.create()
+        let newPlayer = Player.create(socket.id);
         newPlayer.id = socket.id;
         activeClients[socket.id] = {
             socket: socket,
             player: newPlayer
         };
         socket.emit(NetworkIds.CONNECT_ACK, {
-            clientId: socket.id
+            circles: newPlayer.circles,
+            clientId: newPlayer.id
         });
 
         socket.on(NetworkIds.INPUT, data => {

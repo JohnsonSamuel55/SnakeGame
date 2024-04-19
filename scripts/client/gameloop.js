@@ -71,14 +71,14 @@ MyGame.main = (function(graphics, renderer, input, components) {
     console.log("Self Connected");
     playerSelf.circles = data.circles;
     playerSelf.id = data.clientId;
-    playerSelf.alive = data.alive;
+    playerSelf.alive = true;
   }
 
   function connectPlayerOther(data){
     console.log("Other Player Connected: " + data.clientId);
     let model = components.SnakeRemote();
     model.state.circles = data.circles;
-    model.state.alive = data.alive;
+    model.state.alive = true;
     model.state.lastUpdate = performance.now();
 
     model.goal.circles = data.circles;

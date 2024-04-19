@@ -7,14 +7,13 @@ function createPlayer() {
 
   let random = require("../shared/random");
   let circles = [];
-  let id = null;
+  let id = "";
   let size = 0.0005;
   let name = "";
   let score = 0;
   let pointsToIncreaseCircleCount = 10;
   let isInvinsible = true;
   let invinsibleTimer = 2000;
-  let alive = true;
 
   function spawn() {
     let center = {x: random.nextDouble(), y: random.nextDouble()};
@@ -82,9 +81,7 @@ function createPlayer() {
     get score() { return score; },
     get circles() { return circles; },
     get id() { return id; },
-    set id(value) { id = value; },
-    get alive() { return alive; },
-    set alive(value) { alive = value }
+    set id(value) { id = value; }
   }
 }
 
