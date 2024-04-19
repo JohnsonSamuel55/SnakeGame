@@ -29,7 +29,22 @@ function processInput(elapsedTime) {
         let client = activeClients[input.clientId];
         client.lastMessageId = input.message.id;
         switch (input.message.type) {
-            
+            case NetworkIds.INPUT_EAST: 
+                break;
+            case NetworkIds.INPUT_NORTHEAST:
+                break;
+            case NetworkIds.INPUT_NORTH:
+                break;
+            case NetworkIds.INPUT_NORTHWEST:
+                break;
+            case NetworkIds.INPUT_WEST:
+                break;
+            case NetworkIds.INPUT_SOUTHWEST:
+                break;
+            case NetworkIds.INPUT_SOUTH:
+                break;
+            case NetworkIds.INPUT_SOUTHEAST:
+                break;
         }
     }
 }
@@ -39,15 +54,30 @@ function collided(obj1, obj2){
 }
 
 function update(elapsedTime, currentTime) {
+    for(let clientId in activeClients){
+        activeClients[clientId].player.update(currentTime);
+    }
 }
 
 function updateClients(elapsedTime) {
-    
-    /*This will require an update in how our player module is stored and loaded before it can be implemented.
-        Right now the player object for the server is stored in the myGame object, but only the client can access the myGame object
-        Instead we should have a player module that gets saved as a model on the player object on the server for each client 
-        and those player models are updated by the server and client.*/
+    for(let clientId in activeClients){
+        let client = activeClients[clientId];
+        let update = {
+            clientId: clientId,
+            lastMessageId: client.lastMessageId,
+            player: client.player,
+            updateWindow: lastUpdate
+        };
+        if(client.player.reportUpdate){
+            client.socket.emit(NetworkIds.UPDATE_SELF, update);
 
+            for(let otherId in activeClients){
+                if(otherId !== clientId){
+                    activeClients[otherId].socket.emit(NetworkIds.UPDATE_OTHER, update);
+                }
+            }
+        }
+    }
 }
 
 
@@ -71,17 +101,16 @@ function initializeSocketIO(httpServer) {
     function notifyConnect(socket, newPlayer) {
         for (let clientId in activeClients) {
             let client = activeClients[clientId];
-            if (newPlayer.clientId !== clientId) {
+            if (newPlayer.id !== clientId) {
                 client.socket.emit(NetworkIds.CONNECT_OTHER, {
-                    clientId: newPlayer.clientId,
+                    clientId: newPlayer.id,
                     circles: newPlayer.circles,
                     alive: true
                 });
 
                 socket.emit(NetworkIds.CONNECT_OTHER, {
-                    clientId: client.player.clientId,
-                    circles: client.player.circles,
-                    alive: client.player.alive
+                    clientId: client.player.id,
+                    circles: client.player.circles
                 });
             }
         }
@@ -103,7 +132,7 @@ function initializeSocketIO(httpServer) {
   
         // Create an entry in our list of connected clients
         
-        let newPlayer = Player.create()
+        let newPlayer = Player.create(socket.id);
         newPlayer.id = socket.id;
         activeClients[socket.id] = {
             socket: socket,
@@ -132,6 +161,7 @@ function initializeSocketIO(httpServer) {
 }
 
 function initialize(httpServer) {
+    activeClients = {};
     initializeSocketIO(httpServer);
     for (let i = 0; i < MAX_FOOD; i++) {
         food[i] = Food.create(i);

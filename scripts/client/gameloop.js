@@ -11,7 +11,7 @@ MyGame.main = (function(graphics, renderer, input, components) {
       playerOthers = {},
       playerSelf = {
         model: components.Snake(),
-        textures: [MyGame.assets['head'], MyGame.assets['body'], MyGame.assets['tail']]
+        //textures: [MyGame.assets['head'], MyGame.assets['body'], MyGame.assets['tail']]
       },
       messageHistory = Queue.create(),
       messageId = 1,
@@ -78,7 +78,7 @@ MyGame.main = (function(graphics, renderer, input, components) {
   }
 
   function connectPlayerOther(data){
-    console.log("Other Player Connected");
+    console.log("Other Player Connected: " + data.clientId);
     let model = components.SnakeRemote();
     model.state.circles = data.circles;
     model.state.alive = true;

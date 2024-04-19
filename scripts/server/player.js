@@ -7,7 +7,7 @@ function createPlayer() {
 
   let random = require("../shared/random");
   let circles = [];
-  let id = null;
+  let id = "";
   let size = 0.0005;
   let name = "";
   let score = 0;

@@ -8,7 +8,6 @@ MyGame = {
 
 MyGame.loader = (function() {
     'use strict';
-    console.log("loaded");
 
     //Used to load scripts for the client
     let scriptOrder = [
