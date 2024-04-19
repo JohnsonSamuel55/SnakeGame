@@ -4,10 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Multiplayer Snake</title>
+    <link rel="stylesheet" href="styles/styles.css">
 </head>
 <body>
-    <canvas id="gameCanvas" width="800" height="800"></canvas>
-    <script data-main = "scripts/client/loader" src = "scripts/client/require.js"></script>
+    <div id="mainMenu">
+        <h1>Multiplayer Snake</h1> <!-- Title added -->
+        <canvas id="gameCanvas" width="700" height="700" style="display: none;"></canvas>
+        <button id="startButton">Start</button>
+        <button id="highScoresButton">High Scores</button>
+        <button id="controlsButton">Controls</button>
+        <button id="creditsButton">Credits</button>
+    </div>
+    <script data-main="scripts/client/loader" src="scripts/client/require.js"></script>
     <script src="viewport.js"></script>
+    <script src="scripts/client/mainMenu.js"></script>
 </body>
 </html>
