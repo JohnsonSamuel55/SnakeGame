@@ -9,6 +9,7 @@ let Directions = require('../shared/directions')
 const SIMULATION_UPDATE_RATE_MS = 50;
 const STATE_UPDATE_RATE_MS = 100;
 const MAX_FOOD = 150;
+let foodId = 0;
 let food = {};
 let newFood = {};
 let quit = false;
@@ -54,8 +55,16 @@ function collided(obj1, obj2){
 }
 
 function update(elapsedTime, currentTime) {
-    for(let clientId in activeClients){
+    for (let clientId in activeClients){
         activeClients[clientId].player.update(currentTime);
+    }
+
+    //before this, update eaten food
+    for (let i = Object.keys(food).length - 1; i < MAX_FOOD; i++) {
+        let newFoodObject = Food.create(foodId);
+        food[foodId] = newFoodObject;
+        newFood[foodId] = newFoodObject;
+        foodId++;
     }
 }
 
@@ -164,7 +173,7 @@ function initialize(httpServer) {
     activeClients = {};
     initializeSocketIO(httpServer);
     for (let i = 0; i < MAX_FOOD; i++) {
-        food[i] = Food.create(i);
+        food[i] = Food.create(foodId++);
     }
     gameLoop(present(), 0);
 }
