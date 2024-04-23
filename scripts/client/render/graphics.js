@@ -94,22 +94,24 @@ MyGame.graphics = (function() {
     // Draw an image out of a spritesheet into the local canvas coordinate system.
     //
     //------------------------------------------------------------------
-    function drawImageSpriteSheet(spriteSheet, spriteSize, sprite, center, size) {
-        let localCenter = {
-            x: center.x * canvas.width,
-            y: center.y * canvas.width
-        };
-        let localSize = {
-            width: size.width * canvas.width,
-            height: size.height * canvas.height
-        };
+    function drawSubTexture(image, index, subTextureWidth, center, startHeight) {
+        context.save();
 
-        context.drawImage(spriteSheet,
-            sprite * spriteSize.width, 0,                 // which sprite to render
-            spriteSize.width, spriteSize.height,    // size in the spritesheet
-            localCenter.x - localSize.width / 2,
-            localCenter.y - localSize.height / 2,
-            localSize.width, localSize.height);
+        context.translate(center.x, center.y);
+        context.rotate(rotation);
+        context.translate(-center.x, -center.y);
+
+        //
+        // Pick the selected sprite from the sprite sheet to render
+        context.drawImage(
+            image,
+            subTextureWidth * (index + 1), 48 + (startHeight * 16),      // Which sub-texture to pick out
+            subTextureWidth, 16,   // The size of the sub-texture
+            (center.x * canvas.width) - size.x / 2,           // Where to draw the sub-texture
+            (center.y * canvas.height) - size.y / 2,
+            16, 16);
+
+        context.restore();
     }
 
     //------------------------------------------------------------------
@@ -131,7 +133,7 @@ MyGame.graphics = (function() {
         restoreContext: restoreContext,
         rotateCanvas: rotateCanvas,
         drawTexture: drawTexture,
-        drawImageSpriteSheet: drawImageSpriteSheet,
+        drawSubTexture: drawSubTexture,
         drawCircle: drawCircle
     };
 }());

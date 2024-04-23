@@ -17,7 +17,13 @@ MyGame.main = (function(graphics, renderer, input, components) {
       messageId = 1,
       socket = io(),
       networkQueue = Queue.create(),
-      food = {};
+      food = {},
+      foodRenderer = renderer.AnimatedSprite({
+        spriteSheet: MyGame.assets['food'],
+        spriteCount: 6,
+        spriteTime: [200, 200, 200, 200, 200, 200]
+        }, graphics
+      );
 
   socket.on(NetworkIds.CONNECT_ACK, data => {
     networkQueue.enqueue({
@@ -160,10 +166,13 @@ MyGame.main = (function(graphics, renderer, input, components) {
   }
   
   function update(elapsedTime) {
+    foodRenderer.update(elapsedTime);
   }
   
   function render() {
-      
+    for (let model of food) {
+      foodRenderer.render(model);
+    }
   }
   
   function gameLoop(time) {
@@ -193,4 +202,4 @@ MyGame.main = (function(graphics, renderer, input, components) {
       initialize: initialize
   };
 
-}(MyGame.graphics, MyGame.renderer, MyGame.input, MyGame.components));
+}(MyGame.graphics, MyGame.renderers, MyGame.input, MyGame.components));

@@ -22,4 +22,4 @@
       writable: false
     }
   });
-})(typeof exports === 'undefined' ? this['NetworkIds'] = {} : exports);
+})(typeof exports === 'undefined' ? this['FoodTypes'] = {} : exports);

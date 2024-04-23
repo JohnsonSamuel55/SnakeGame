@@ -28,11 +28,11 @@ MyGame.loader = (function() {
             message: 'Shared functionality loaded',
             onComplete: null
         }, {
-            scripts: ['components/snake', 'components/circle', 'components/snake-remote'],
+            scripts: ['components/snake', 'components/circle', 'components/snake-remote', 'components/food'],
             message: 'Components loaded',
             onComplete: null
         }, {
-            scripts: ['render/graphics', 'render/snake'],
+            scripts: ['render/graphics', 'render/snake', 'render/animated-sprite'],
             message: 'Rendering loaded',
             onComplete: null
         }, {
@@ -110,7 +110,6 @@ MyGame.loader = (function() {
         if (fileExtension) {
             xhr.open('GET', source, true);
             xhr.responseType = 'blob';
-
             xhr.onload = function() {
                 if (xhr.status === 200) {
                     if (fileExtension === 'png' || fileExtension === 'jpg') {
