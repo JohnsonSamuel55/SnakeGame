@@ -12,6 +12,7 @@ const MAX_FOOD = 150;
 let foodId = 0;
 let food = {};
 let newFood = {};
+let consumedFood = {};
 let quit = false;
 let lastUpdate = 0;
 let activeClients = {};
@@ -50,8 +51,117 @@ function processInput(elapsedTime) {
     }
 }
 
-function collided(obj1, obj2){
+function collided(){
+    let leftWall = {
+        x1: 0,
+        y1: 0,
+        x2: 0,
+        y2: 6000
+    }
+    let rightWall = {
+        x1: 6000,
+        y1: 0,
+        x2: 6000,
+        y2: 6000
+    }
+    let topWall = {
+        x1: 0,
+        y1: 0,
+        x2: 6000,
+        y2: 0
+    }
+    let bottomWall = {
+        x1: 0,
+        y1: 6000,
+        x2: 6000,
+        y2: 6000
+    }
 
+    function circlesOverlap(circle1, circle2) {
+        // Calculate the distance between the center points of the circles
+        const distance = Math.sqrt((circle2.x - circle1.x) ** 2 + (circle2.y - circle1.y) ** 2);
+    
+        // Sum of the radii of the circles
+        const sumRadii = circle1.radius + circle2.radius;
+    
+        // If the distance between the centers is less than or equal to the sum of the radii, they overlap
+        return distance <= sumRadii;
+    }
+
+    // Function to calculate the distance between a point (x, y) and a line defined by two points (x1, y1) and (x2, y2)
+    function pointToLineDistance(x, y, x1, y1, x2, y2) {
+        const numerator = Math.abs((y2 - y1) * x - (x2 - x1) * y + x2 * y1 - y2 * x1);
+        const denominator = Math.sqrt((y2 - y1) ** 2 + (x2 - x1) ** 2);
+        return numerator / denominator;
+    }
+    
+    // Function to determine if a circle intersects a line
+    function circleLineIntersect(circle, line) {
+        const distance = pointToLineDistance(circle.x, circle.y, line.x1, line.y1, line.x2, line.y2);
+        return distance <= circle.radius;
+    }
+    //for each client
+    for(let clientId in activeClients){
+        //find the client's head
+        let currentHead = {};
+        let circle1 ={
+            x: currentHead.center.x,
+            y: currentHead.center.y,
+            radius: currentHead.size/2
+        };
+        let clientAlive = true;
+        
+        //if the client's head overlaps with a wall
+        if(circleLineIntersect(circle1, topWall) || circleLineIntersect(circle1, bottomWall) || circleLineIntersect(circle1, rightWall) || circleLineIntersect(circle1, leftWall)){
+            for(let id in activeClients){ 
+                activeClients[id].socket.emit(NetworkIds.UPDATE_DEATH, {
+                    clientId: clientId
+                });
+            }
+            clientAlive = false;
+        }
+        if(clientAlive){
+            //If the client's head overlaps with any part of another snake
+            for(let otherId in activeClients){
+                if(activeClients[otherId].id !== activeClients[clientId].id){
+                    let circles = {};
+                    for( let circle in circles){
+                        let circle2 = {
+                            x: circle.center.x,
+                            y: circle.center.y,
+                            radius: circle.size/2,
+                            type: circle.type
+                        };
+                        if(circlesOverlap(circle1, circle2)){ 
+                            for(let id in activeClients){ 
+                                activeClients[id].socket.emit(NetworkIds.UPDATE_DEATH, {
+                                    clientId: clientId
+                                });
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        if(clientAlive){
+            //if the client's head overlaps with a food the food is consumed by the client
+            let toRemove = {};
+            for(let piece of food){
+                let circle2 = {
+                    x: piece.center.x,
+                    y: piece.center.y,
+                    radius: piece.radius
+                }
+                if(circlesOverlap(circle2, circle1)){
+                    //increase score        
+                    toRemove[piece.id] = true; // Storing the id as key for quick lookup
+                    consumedFood[piece.id] = piece;
+                }
+            }
+            // Remove items from the food array based on keys stored in toRemove
+            food = food.filter(piece => !toRemove.hasOwnProperty(piece.id));
+        }
+    }
 }
 
 function update(elapsedTime, currentTime) {
@@ -66,6 +176,7 @@ function update(elapsedTime, currentTime) {
         newFood[foodId] = newFoodObject;
         foodId++;
     }
+    collided();
 }
 
 function updateClients(elapsedTime) {
