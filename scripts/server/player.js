@@ -8,7 +8,7 @@ function createPlayer() {
   let random = require("../shared/random");
   let circles = [];
   let id = "";
-  let size = 0.0005;
+  let size = 0.035;
   let name = "";
   let score = 0;
   let pointsToIncreaseCircleCount = 10;
@@ -17,29 +17,29 @@ function createPlayer() {
 
   function spawn() {
     let center = {x: random.nextDouble(), y: random.nextDouble()};
-    circles.push({
+    circles.push(Circle.create({
         center: {x: center.x, y: center.y},
         type: CircleTypes.HEAD,
         turnPoints: [],
         direction: Directions.EAST,
         speed: 0.01
-      });
+      }));
     for (let i = 1; i < 4; i++) {
-      circles.push({
-        center: {x: center.x - size * i, y: center.y},
+      circles.push(Circle.create({
+        center: {x: center.x - size * i * .82, y: center.y},
         type: CircleTypes.BODY,
         turnPoints: [],
         direction: Directions.EAST,
         speed: 0.01
-      });
+      }));
     }
-    circles.push({
-      center: {x: center.x - size * i, y: center.y},
+    circles.push(Circle.create({
+      center: {x: center.x - size * 4 * .82, y: center.y},
       type: CircleTypes.TAIL,
       turnPoints: [],
       direction: Directions.EAST,
       speed: 0.01
-    });
+    }));
     isInvinsible = true;
   }
 
@@ -52,7 +52,7 @@ function createPlayer() {
     if (score % pointsToIncreaseCircleCount === 0) {
       let previousCircle = circles[circles.length - 1];
       let newCircle = {
-        center: {x: previousCircle.center.x - Math.cos(previousCircle.direction) * size, y: previousCircle.center.y - Math.sin(previousCircle.direction) * size},
+        center: {x: previousCircle.center.x - Math.cos(previousCircle.direction) * size * .82, y: previousCircle.center.y - Math.sin(previousCircle.direction) * size * .82},
         type: CircleTypes.TAIL,
         turnPoints: previousCircle.turnPoints,
         direction: previousCircle.direction,
@@ -81,7 +81,8 @@ function createPlayer() {
     get score() { return score; },
     get circles() { return circles; },
     get id() { return id; },
-    set id(value) { id = value; }
+    set id(value) { id = value; },
+    get size() { return size }
   }
 }
 

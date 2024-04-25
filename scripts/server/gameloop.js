@@ -103,7 +103,7 @@ function collided(){
     //for each client
     for(let clientId in activeClients){
         //find the client's head
-        let currentHead = {};
+        let currentHead = activeClients[clientId].player.circles[0];
         let circle1 ={
             x: currentHead.center.x,
             y: currentHead.center.y,
@@ -145,21 +145,21 @@ function collided(){
         }
         if(clientAlive){
             //if the client's head overlaps with a food the food is consumed by the client
-            let toRemove = {};
-            for(let piece of food){
+            let toRemove = [];
+            for(let piece in food){
                 let circle2 = {
-                    x: piece.center.x,
-                    y: piece.center.y,
-                    radius: piece.radius
+                    x: food[piece].center.x,
+                    y: food[piece].center.y,
+                    radius: food[piece].radius
                 }
                 if(circlesOverlap(circle2, circle1)){
                     //increase score        
-                    toRemove[piece.id] = true; // Storing the id as key for quick lookup
+                    toRemove.push(piece); // Storing the id as key for quick lookup
                     consumedFood[piece.id] = piece;
                 }
             }
             // Remove items from the food array based on keys stored in toRemove
-            food = food.filter(piece => !toRemove.hasOwnProperty(piece.id));
+            toRemove.forEach((key) => delete food[key]);
         }
     }
 }
@@ -254,6 +254,7 @@ function initializeSocketIO(httpServer) {
         
         let newPlayer = Player.create(socket.id);
         newPlayer.id = socket.id;
+        newPlayer.spawn();
         activeClients[socket.id] = {
             socket: socket,
             player: newPlayer
@@ -261,7 +262,8 @@ function initializeSocketIO(httpServer) {
         socket.emit(NetworkIds.CONNECT_ACK, {
             clientId: socket.id,
             circles: newPlayer.circles,
-            food: food
+            food: food,
+            size: newPlayer.size
         });
 
         socket.on(NetworkIds.INPUT, data => {

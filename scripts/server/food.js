@@ -8,6 +8,7 @@ function createFood(foodId) {
   let type;
   let value;
   let id = foodId;
+  let size = .01
   switch (random.nextRange(0,6)) {
     case 0:
       type = Food.MAPLE;
@@ -24,6 +25,7 @@ function createFood(foodId) {
     case 3:
       type = Food.POWDERED;
       value = 4;
+      size = .03;
       break;
     case 4:
       type = Food.CANDY;
@@ -31,23 +33,13 @@ function createFood(foodId) {
       break;
   }
 
-  Object.defineProperty(that, "center", {
-    get: () => center
-  });
-
-  Object.defineProperty(that, "type", {
-    get: () => type
-  });
-
-  Object.defineProperty(that, "value", {
-    get: () => value
-  });
-
-  Object.defineProperty(that, "id", {
-    get: () => id
-  });
-
-  return that;
+  return {
+    center,
+    type,
+    value,
+    id,
+    size
+  };
 }
 
 module.exports.create = () => createFood();
