@@ -1,17 +1,21 @@
-MyGame.renderers.SnakeRenderer = function(graphics, snake) {
+MyGame.renderers.SnakeRenderer = function(graphics) {
 
 
-  function render() {
-    for (let circle of snake.model.circles) {
-      if (circle.type == MyGame.CircleTypes.HEAD) {
-        graphics.drawTexture(snake.textures[0], circle.center, circle.direction, snake.model.size);
+  function render(model) {
+    for (let circle of model.circles) {
+      if (circle.type == CircleTypes.HEAD) {
+        graphics.drawTexture(MyGame.assets['head'], circle.center, circle.direction, {x: model.size, y: model.size});
       }
-      else if (circle.type == MyGame.CircleTypes.BODY) {
-        graphics.drawTexture(snake.textures[1], circle.center, circle.direction, snake.model.size);
+      else if (circle.type == CircleTypes.BODY) {
+        graphics.drawTexture(MyGame.assets['body'], circle.center, circle.direction, {x: model.size, y: model.size});
       }
       else {
-        graphics.drawTexture(snake.textures[2], circle.center, circle.direction, snake.model.size);
+        graphics.drawTexture(MyGame.assets['tail'], circle.center, circle.direction, {x: model.size, y: model.size});
       }
     }
   }
+
+  return {
+    render
+  };
 }

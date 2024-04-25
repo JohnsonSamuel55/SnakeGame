@@ -4,11 +4,11 @@ MyGame.components.Snake = function() {
   let circles = [];
   let id;
   let alive = true;
-  let size = 0.01;
+  let size = 0.001;
 
   Object.defineProperty(that, 'circles', {
-    get: () => direction,
-    set: (value) => { speed = value; }
+    get: () => circles,
+    set: (value) => { circles = value; }
   });
 
   Object.defineProperty(that, 'alive', {
@@ -17,7 +17,7 @@ MyGame.components.Snake = function() {
   });
 
   Object.defineProperty(that, 'size', {
-    get: () => direction,
+    get: () => size,
     set: (value) => { size = value; }
   });
 

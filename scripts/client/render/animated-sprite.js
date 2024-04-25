@@ -9,7 +9,6 @@ MyGame.renderers.AnimatedSprite = function(spec, graphics) {
     let animationTime = 0;
     let subImageIndex = 0;
     let subTextureWidth = 16;
-    let image = spec.image;
 
     //
     // Load he texture to use for the particle system loading and ready for rendering
@@ -41,7 +40,8 @@ MyGame.renderers.AnimatedSprite = function(spec, graphics) {
     //
     //------------------------------------------------------------------
     function render(model) {
-        graphics.drawSubTexture(image, subImageIndex, subTextureWidth, model.center, model.type);
+        let image = MyGame.assets['food']
+        graphics.drawSubTexture(image, subImageIndex, subTextureWidth, model.center, model.type, {x: model.size, y: model.size});
     }
 
     let api = {

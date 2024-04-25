@@ -247,5 +247,5 @@ function handleControlsButtonClick() {
 		  button.style.display = "none";
 		});
 
-		Game.play();
+		MyGame.loader();		
 	}

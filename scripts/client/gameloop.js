@@ -7,17 +7,20 @@ MyGame.main = (function(graphics, renderer, input, components) {
   'use strict';
 
   let lastTimeStamp = performance.now(),
+      backgrounds = [],
       myKeyboard = input.Keyboard(),
       playerOthers = {},
       playerSelf = {
         model: components.Snake(),
-        //textures: [MyGame.assets['head'], MyGame.assets['body'], MyGame.assets['tail']]
+        textures: [MyGame.assets['head'], MyGame.assets['body'], MyGame.assets['tail']]
       },
       messageHistory = Queue.create(),
       messageId = 1,
       socket = io(),
       networkQueue = Queue.create(),
       food = {},
+      backgroundRenderer = renderer.BackgroundRenderer(graphics),
+      snakeRenderer = renderer.SnakeRenderer(graphics),
       foodRenderer = renderer.AnimatedSprite({
         spriteSheet: MyGame.assets['food'],
         spriteCount: 6,
@@ -76,11 +79,14 @@ MyGame.main = (function(graphics, renderer, input, components) {
 
   function connectPlayerSelf(data){
     console.log("Self Connected");
-    playerSelf.circles = data.circles;
-    playerSelf.id = data.clientId;
-    playerSelf.alive = true;
+    playerSelf.model.circles = data.circles;
+    playerSelf.model.id = data.clientId;
+    playerSelf.model.alive = true;
+    playerSelf.model.size = data.size;
 
     food = data.food;
+    console.log(data.food)
+    graphics.updateViewport({x: data.circles[0].center.x - (1 / 6), y: data.circles[0].center.y - (1 / 6)});
   }
 
   function connectPlayerOther(data){
@@ -108,13 +114,18 @@ MyGame.main = (function(graphics, renderer, input, components) {
   }
 
   function updatePlayerTurnPoints(data){
-    if (data.clientId == playerSelf.id) {
+    if (data.clientId == playerSelf.model.id) {
       playerSelf.addTurnPoint(data.turnPoint);
     }
     else {
       playerOthers[data.clientId].addTurnPoint(data.turnPoint);
     }
     //Update the self player based on data from the server
+  }
+
+  function updatePlayerSelf(data) {
+    playerSelf.model.circles = data.circles;
+    graphics.updateViewport({x: data.circles[0].center.x - (1 / 6), y: data.circles[0].center.y - (1 / 6)})
   }
 
   function updatePlayerOther(data){
@@ -167,11 +178,17 @@ MyGame.main = (function(graphics, renderer, input, components) {
   
   function update(elapsedTime) {
     foodRenderer.update(elapsedTime);
+    // graphics.updateViewport({x: graphics.viewport.x + .001, y: graphics.viewport.y + .001});
   }
   
   function render() {
-    for (let model of food) {
-      foodRenderer.render(model);
+    backgroundRenderer.render(backgrounds);
+    for (let model in food) {
+      foodRenderer.render(food[model]);
+    }
+    snakeRenderer.render(playerSelf.model);
+    for (let otherSnake in playerOthers) {
+      snakeRenderer.render(playerOthers[otherSnake].model);
     }
   }
   
@@ -191,8 +208,12 @@ MyGame.main = (function(graphics, renderer, input, components) {
 
       //Create the keyboard handlers and register the keyboard commands
       
-
-
+      for (let i = 0; i < 9; i++) {
+        for (let j = 0; j < 9; j++) {
+          backgrounds.push(components.Background({center: {x: i / 9, y: j / 9}, texture: MyGame.assets['background']}));
+        }
+      }
+      
       //
       // Get the game loop started
       requestAnimationFrame(gameLoop);

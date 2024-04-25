@@ -7,7 +7,9 @@ MyGame.graphics = (function() {
     'use strict';
 
     let canvas = document.getElementById('gameCanvas');
-    let context = canvas.getContext('2d')
+    let context = canvas.getContext('2d');
+    let viewport = {x: 0.5, y: 0.5};
+    let viewportSize = 0.33
 
     //------------------------------------------------------------------
     //
@@ -79,6 +81,8 @@ MyGame.graphics = (function() {
         context.translate(center.x, center.y);
         context.rotate(rotation);
         context.translate(-center.x, -center.y);
+        center = {x: (center.x - viewport.x) / viewportSize * canvas.width, y: (center.y - viewport.y) / viewportSize * canvas.height};
+        size = {x: size.x / viewportSize * canvas.width, y: size.y / viewportSize * canvas.height};
 
         context.drawImage(
             image,
@@ -94,22 +98,19 @@ MyGame.graphics = (function() {
     // Draw an image out of a spritesheet into the local canvas coordinate system.
     //
     //------------------------------------------------------------------
-    function drawSubTexture(image, index, subTextureWidth, center, startHeight) {
+    function drawSubTexture(image, index, subTextureWidth, center, startHeight, size) {
         context.save();
-
-        context.translate(center.x, center.y);
-        context.rotate(rotation);
-        context.translate(-center.x, -center.y);
-
-        //
+        center = {x: (center.x - viewport.x) / viewportSize * canvas.width, y: (center.y - viewport.y) / viewportSize * canvas.height};
+        size = {x: size.x / viewportSize * canvas.width, y: size.y / viewportSize * canvas.height};
+        let heightDiff = index > 3 ? 1 : 0
         // Pick the selected sprite from the sprite sheet to render
         context.drawImage(
             image,
-            subTextureWidth * (index + 1), 48 + (startHeight * 16),      // Which sub-texture to pick out
+            subTextureWidth * (index + 1), 49 + (startHeight * 16) - heightDiff,      // Which sub-texture to pick out
             subTextureWidth, 16,   // The size of the sub-texture
-            (center.x * canvas.width) - size.x / 2,           // Where to draw the sub-texture
-            (center.y * canvas.height) - size.y / 2,
-            16, 16);
+            center.x - size.x / 2,           // Where to draw the sub-texture
+            center.y - size.y / 2,
+            size.x, size.y);
 
         context.restore();
     }
@@ -127,6 +128,10 @@ MyGame.graphics = (function() {
         context.fill();
     }
 
+    function updateViewport(newViewport) {
+        viewport = newViewport;
+    }
+
     return {
         clear: clear,
         saveContext: saveContext,
@@ -134,6 +139,8 @@ MyGame.graphics = (function() {
         rotateCanvas: rotateCanvas,
         drawTexture: drawTexture,
         drawSubTexture: drawSubTexture,
-        drawCircle: drawCircle
+        drawCircle: drawCircle,
+        updateViewport: updateViewport,
+        get viewport() { return viewport } 
     };
 }());
