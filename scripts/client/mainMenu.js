@@ -1,4 +1,19 @@
-    // Global variables for control keys
+    window.onload = function() {
+		// Retrieve high scores from the browser storage
+		var storedHighScores = localStorage.getItem('highScores');
+
+		if (storedHighScores) {
+			// If high scores are stored, parse them
+			var highScores = JSON.parse(storedHighScores);
+		} else {
+			// If no high scores are stored, initialize with five zeroes
+			var highScores = [0, 0, 0, 0, 0];
+			// Store the initial high scores
+			localStorage.setItem('highScores', JSON.stringify(highScores));
+		}
+	}
+	
+	// Global variables for control keys
 	var CONTROL_KEYS = {
 		LEFT: 37,
 		UP: 38,
@@ -78,9 +93,51 @@
     var creditsButton = document.getElementById("creditsButton");
   	creditsButton.addEventListener("click", handleCreditsButtonClick);
 
-    function handleHighScoresButtonClick() {
+function handleHighScoresButtonClick() {
+	document.getElementById("mainMenu").style.display = "none";
 
+	var highScoresScreen = document.getElementById("highScoresScreen");
+	highScoresScreen.style.display = "block";
+
+	// Retrieve high scores from the browser storage
+    var storedHighScores = localStorage.getItem('highScores');
+
+    if (storedHighScores) {
+        // If high scores are stored, parse them
+        var highScores = JSON.parse(storedHighScores);
+    } else {
+        // If no high scores are stored, initialize with five zeroes
+        var highScores = [0, 0, 0, 0, 0];
+        // Store the initial high scores
+        localStorage.setItem('highScores', JSON.stringify(highScores));
     }
+
+	// Display the high scores in the screen
+    var highScoresList = document.getElementById("highScoresList");
+    highScoresList.innerHTML = ''; // Clear previous list
+
+    for (var i = 0; i < highScores.length; i++) {
+        var listItem = document.createElement('li');
+        listItem.textContent = "High Score " + (i + 1) + ": " + highScores[i];
+        highScoresList.appendChild(listItem);
+    }
+
+	function handleKeyPress(event) {
+        if (event.keyCode === 27) { // Check if the pressed key is the Escape key
+            // Hide the controls screen
+            highScoresScreen.style.display = "none";
+
+            // Show the main menu again
+            document.getElementById("mainMenu").style.display = "block";
+
+            // Remove the event listener
+            document.removeEventListener("keydown", handleKeyPress);
+        }
+    }
+
+    // Add event listener for keydown event
+    document.addEventListener("keydown", handleKeyPress);
+}
 
     var selectedInput = null;
 
