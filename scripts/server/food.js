@@ -8,7 +8,7 @@ function createFood(foodId) {
   let type;
   let value;
   let id = foodId;
-  let size = .01
+  let size = .02
   switch (random.nextRange(0,6)) {
     case 0:
       type = Food.MAPLE;

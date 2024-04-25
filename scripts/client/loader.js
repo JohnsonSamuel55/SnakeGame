@@ -6,7 +6,7 @@ MyGame = {
     assets: {}
 };
 
-MyGame.loader = (function() {
+MyGame.loader = function() {
     'use strict';
 
     //Used to load scripts for the client
@@ -28,11 +28,11 @@ MyGame.loader = (function() {
             message: 'Shared functionality loaded',
             onComplete: null
         }, {
-            scripts: ['components/snake', 'components/circle', 'components/snake-remote', 'components/food'],
+            scripts: ['components/snake', 'components/circle', 'components/snake-remote', 'components/food', 'components/background'],
             message: 'Components loaded',
             onComplete: null
         }, {
-            scripts: ['render/graphics', 'render/snake', 'render/animated-sprite'],
+            scripts: ['render/graphics', 'render/snake', 'render/animated-sprite', 'render/background'],
             message: 'Rendering loaded',
             onComplete: null
         }, {
@@ -54,6 +54,9 @@ MyGame.loader = (function() {
         }, {
             key: 'food',
             source: 'assets/textures/food.png'
+        }, {
+            key: 'background',
+            source: 'assets/textures/background.png'
         }];
     
     function loadScripts(scripts, onComplete) {
@@ -156,4 +159,4 @@ MyGame.loader = (function() {
         }
     );
 
-}());
+};

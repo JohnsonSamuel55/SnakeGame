@@ -9,6 +9,10 @@ MyGame.components.Circle = function() {
     get: () => center
   });
 
+  Object.defineProperty(that, 'direction', {
+    get: () => direction
+  });
+
   Object.defineProperty(that, 'turnPoints', {
     get: () => turnPoints
   });
