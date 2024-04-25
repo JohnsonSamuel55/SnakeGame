@@ -120,6 +120,13 @@
 	      if (this.viewportRect.bottom > this.worldRect.bottom)
 	        this.yView = this.worldRect.bottom - this.hView;
 	    }
+		if(this.xView > 4000) {
+			this.xView = 4000;
+		}
+		if(this.yView > 4000) {
+			this.yView = 4000;
+		}
+		//console.log("Y: ", this.yView, "X: ", this.xView);
 
 	  }
 
@@ -171,6 +178,13 @@
 	    if (this.y + this.height / 2 > worldHeight) {
 	      this.y = worldHeight - this.height / 2;
 	    }
+		if(this.y > 4675) {
+			this.y = 4675;
+		}
+		if(this.x > 4675) {
+			this.x = 4675;
+		}
+		//console.log("PX: ", this.x, "PY: ", this.y);
 	  }
 
 	  Player.prototype.draw = function(context, xView, yView) {
@@ -261,8 +275,8 @@
 	    dx = 0;
 	    dy = 0;
 	    // match destination with source to not scale the image
-	    dWidth = 800;
-	    dHeight = 800;
+	    dWidth = 700;
+	    dHeight = 700;
 
 	    context.drawImage(this.image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
 	  }
@@ -294,7 +308,7 @@
 	  room.map.generate();
 
 	  // setup player
-	  var player = new Game.Player(50, 50);
+	  var player = new Game.Player(2325, 2325);
 
 	  // Old camera setup. It not works with maps smaller than canvas. Keeping the code deactivated here as reference.
 	  /* var camera = new Game.Camera(0, 0, canvas.width, canvas.height, room.width, room.height);*/
@@ -364,44 +378,95 @@
 	
 	// Game controls object with control key references
 	Game.controls = {
-		left: false,
+		left: true,
 		up: false,
 		right: false,
 		down: false,
 		pause: false
 	};
 
+	Game.pressed = {
+		left: false,
+		up: false,
+		right: false,
+		down: false,
+	};
+
 	// Event listeners using control key references
 window.addEventListener("keydown", function(e) {
 	switch (e.keyCode) {
-	  case CONTROL_KEYS.LEFT:
-		Game.controls.left = true;
-		break;
-	  case CONTROL_KEYS.UP:
-		Game.controls.up = true;
-		break;
-	  case CONTROL_KEYS.RIGHT:
-		Game.controls.right = true;
-		break;
-	  case CONTROL_KEYS.DOWN:
-		Game.controls.down = true;
-		break;
+	  	case CONTROL_KEYS.LEFT:
+			Game.pressed.left = true;
+			if(!Game.controls.right){
+				Game.controls.left = true;
+				Game.controls.up = false;
+				Game.controls.down = false;
+				if(Game.pressed.up) {
+					Game.controls.up = true;
+				}
+				if(Game.pressed.down) {
+					Game.controls.down = true;
+				}
+			}
+			break;
+	  	case CONTROL_KEYS.UP:
+			Game.pressed.up = true;
+			if(!Game.controls.down){
+				Game.controls.up = true;
+				Game.controls.left = false;
+				Game.controls.right = false;
+				if(Game.pressed.left) {
+					Game.controls.left = true;
+				}
+				if(Game.pressed.right) {
+					Game.controls.right = true;
+				}
+			}
+			break;
+	  	case CONTROL_KEYS.RIGHT:
+			Game.pressed.right = true;
+			if(!Game.controls.left){
+				Game.controls.right = true;
+				Game.controls.up = false;
+				Game.controls.down = false;
+				if(Game.pressed.up) {
+					Game.controls.up = true;
+				}
+				if(Game.pressed.down) {
+					Game.controls.down = true;
+				}
+			}
+			break;
+	  	case CONTROL_KEYS.DOWN:
+			Game.pressed.down = true;
+			if(!Game.controls.up){
+				Game.controls.down = true;
+				Game.controls.left = false;
+				Game.controls.right = false;
+				if(Game.pressed.left) {
+					Game.controls.left = true;
+				}
+				if(Game.pressed.right) {
+					Game.controls.right = true;
+				}
+			}
+			break;
 	}
   }, false);
   
   window.addEventListener("keyup", function(e) {
 	switch (e.keyCode) {
 	  case CONTROL_KEYS.LEFT:
-		Game.controls.left = false;
+		Game.pressed.left = false;
 		break;
 	  case CONTROL_KEYS.UP:
-		Game.controls.up = false;
+		Game.pressed.up = false;
 		break;
 	  case CONTROL_KEYS.RIGHT:
-		Game.controls.right = false;
+		Game.pressed.right = false;
 		break;
 	  case CONTROL_KEYS.DOWN:
-		Game.controls.down = false;
+		Game.pressed.down = false;
 		break;
 	  case CONTROL_KEYS.PAUSE:
 		Game.togglePause();
