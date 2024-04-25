@@ -275,8 +275,8 @@
 	    dx = 0;
 	    dy = 0;
 	    // match destination with source to not scale the image
-	    dWidth = 800;
-	    dHeight = 800;
+	    dWidth = 700;
+	    dHeight = 700;
 
 	    context.drawImage(this.image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
 	  }
