@@ -1,7 +1,7 @@
     window.onload = function() {
 		// Retrieve high scores from the browser storage
 		var storedHighScores = localStorage.getItem('highScores');
-
+		console.log(storedHighScores);
 		if (storedHighScores) {
 			// If high scores are stored, parse them
 			var highScores = JSON.parse(storedHighScores);
