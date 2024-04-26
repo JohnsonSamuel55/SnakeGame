@@ -6,7 +6,7 @@ let Circle = require('./circle');
 let Food = require('./food')
 let Directions = require('../shared/directions')
 
-const SIMULATION_UPDATE_RATE_MS = 50;
+const SIMULATION_UPDATE_RATE_MS = 10;
 const STATE_UPDATE_RATE_MS = 100;
 const MAX_FOOD = 150;
 let foodId = 0;

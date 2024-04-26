@@ -17,7 +17,7 @@ function createPlayer() {
   let reportUpdate = false;
 
   function spawn() {
-    let center = {x: random.nextDouble(), y: random.nextDouble()};
+    let center = {x: .25, y: .5};
     circles.push(Circle.create({
         center: {x: center.x, y: center.y},
         type: CircleTypes.HEAD,
@@ -42,6 +42,9 @@ function createPlayer() {
       speed: 0.0001
     }));
     isInvinsible = true;
+    for (let i = 0; i < 5; i++) {
+      circles[i].turnPoints.push({center: {x: .75, y: .5}, directionAfter: Directions.NORTH});
+    }
   }
 
   function setName(newName) {

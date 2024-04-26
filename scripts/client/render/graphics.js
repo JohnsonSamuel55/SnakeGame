@@ -78,9 +78,9 @@ MyGame.graphics = (function() {
     function drawTexture(image, center, rotation, size) {
         context.save();
 
-        context.translate(center.x, center.y);
+        context.translate((center.x - viewport.x) / viewportSize * canvas.width, (center.y - viewport.y) / viewportSize * canvas.height);
         context.rotate(rotation);
-        context.translate(-center.x, -center.y);
+        context.translate(-(center.x - viewport.x) / viewportSize * canvas.width, -(center.y - viewport.y) / viewportSize * canvas.height);
         center = {x: (center.x - viewport.x) / viewportSize * canvas.width, y: (center.y - viewport.y) / viewportSize * canvas.height};
         size = {x: size.x / viewportSize * canvas.width, y: size.y / viewportSize * canvas.height};
 
