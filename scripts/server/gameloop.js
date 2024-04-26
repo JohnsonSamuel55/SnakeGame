@@ -166,7 +166,7 @@ function collided(){
 
 function update(elapsedTime, currentTime) {
     for (let clientId in activeClients){
-        activeClients[clientId].player.update(currentTime);
+        activeClients[clientId].player.update(elapsedTime);
     }
 
     //before this, update eaten food
@@ -185,10 +185,10 @@ function updateClients(elapsedTime) {
         let update = {
             clientId: clientId,
             lastMessageId: client.lastMessageId,
-            player: client.player,
+            circles: client.player.circles,
             updateWindow: lastUpdate
         };
-        if(client.player.reportUpdate){
+        if (client.player.reportUpdate){
             client.socket.emit(NetworkIds.UPDATE_SELF, update);
 
             for(let otherId in activeClients){
@@ -197,6 +197,10 @@ function updateClients(elapsedTime) {
                 }
             }
         }
+    }
+
+    for (let clientId in activeClients) {
+        activeClients[clientId].player.reportUpdate = false;
     }
 }
 

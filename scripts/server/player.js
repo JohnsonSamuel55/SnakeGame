@@ -14,6 +14,7 @@ function createPlayer() {
   let pointsToIncreaseCircleCount = 10;
   let isInvinsible = true;
   let invinsibleTimer = 2000;
+  let reportUpdate = false;
 
   function spawn() {
     let center = {x: random.nextDouble(), y: random.nextDouble()};
@@ -22,7 +23,7 @@ function createPlayer() {
         type: CircleTypes.HEAD,
         turnPoints: [],
         direction: Directions.EAST,
-        speed: 0.01
+        speed: 0.0001
       }));
     for (let i = 1; i < 4; i++) {
       circles.push(Circle.create({
@@ -30,7 +31,7 @@ function createPlayer() {
         type: CircleTypes.BODY,
         turnPoints: [],
         direction: Directions.EAST,
-        speed: 0.01
+        speed: 0.0001
       }));
     }
     circles.push(Circle.create({
@@ -38,7 +39,7 @@ function createPlayer() {
       type: CircleTypes.TAIL,
       turnPoints: [],
       direction: Directions.EAST,
-      speed: 0.01
+      speed: 0.0001
     }));
     isInvinsible = true;
   }
@@ -56,7 +57,7 @@ function createPlayer() {
         type: CircleTypes.TAIL,
         turnPoints: previousCircle.turnPoints,
         direction: previousCircle.direction,
-        speed: 0.01
+        speed: 0.0001
       };
       previousCircle.setType(CircleTypes.BODY);
       circles.push(Circle.create(newCircle));
@@ -64,6 +65,7 @@ function createPlayer() {
   }
 
   function update(elapsedTime) {
+    reportUpdate = true;
     invinsibleTimer -= elapsedTime;
     if (invinsibleTimer <= 0) {
       isInvinsible = false;
@@ -82,7 +84,9 @@ function createPlayer() {
     get circles() { return circles; },
     get id() { return id; },
     set id(value) { id = value; },
-    get size() { return size }
+    get size() { return size },
+    get reportUpdate() { return reportUpdate },
+    set reportUpdate(value) { reportUpdate = value; }
   }
 }
 
