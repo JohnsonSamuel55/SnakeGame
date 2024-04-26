@@ -43,7 +43,7 @@ function createPlayer() {
     }));
     isInvinsible = true;
     for (let i = 0; i < 5; i++) {
-      circles[i].turnPoints.push({center: {x: .75, y: .5}, directionAfter: Directions.NORTH});
+      circles[i].turnPoints.push({center: {x: .5, y: .5}, directionAfter: Directions.NORTH});
     }
   }
 

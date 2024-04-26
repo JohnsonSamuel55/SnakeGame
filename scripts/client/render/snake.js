@@ -2,7 +2,9 @@ MyGame.renderers.SnakeRenderer = function(graphics) {
 
 
   function render(model) {
-    for (let circle of model.circles) {
+    let circles = model.circles;
+    for (let i = circles.length - 1; i >= 0; i--) {
+      let circle = circles[i];
       if (circle.type == CircleTypes.HEAD) {
         graphics.drawTexture(MyGame.assets['head'], circle.center, circle.direction, {x: model.size, y: model.size});
       }

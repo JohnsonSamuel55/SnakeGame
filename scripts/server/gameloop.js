@@ -56,25 +56,25 @@ function collided(){
         x1: 0,
         y1: 0,
         x2: 0,
-        y2: 6000
+        y2: 1
     }
     let rightWall = {
-        x1: 6000,
+        x1: 1,
         y1: 0,
-        x2: 6000,
-        y2: 6000
+        x2: 1,
+        y2: 1
     }
     let topWall = {
         x1: 0,
         y1: 0,
-        x2: 6000,
+        x2: 1,
         y2: 0
     }
     let bottomWall = {
         x1: 0,
-        y1: 6000,
-        x2: 6000,
-        y2: 6000
+        y1: 1,
+        x2: 1,
+        y2: 1
     }
 
     function circlesOverlap(circle1, circle2) {
@@ -107,12 +107,12 @@ function collided(){
         let circle1 ={
             x: currentHead.center.x,
             y: currentHead.center.y,
-            radius: currentHead.size/2
+            radius: activeClients[clientId].player.size / 2
         };
         let clientAlive = true;
         
         //if the client's head overlaps with a wall
-        if(circleLineIntersect(circle1, topWall) || circleLineIntersect(circle1, bottomWall) || circleLineIntersect(circle1, rightWall) || circleLineIntersect(circle1, leftWall)){
+        if (circleLineIntersect(circle1, leftWall) || circleLineIntersect(circle1, rightWall) || circleLineIntersect(circle1, topWall) || circleLineIntersect(circle1, bottomWall)){
             for(let id in activeClients){ 
                 activeClients[id].socket.emit(NetworkIds.UPDATE_DEATH, {
                     clientId: clientId
