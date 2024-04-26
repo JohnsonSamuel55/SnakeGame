@@ -3,7 +3,8 @@ MyGame = {
     components: {},
     renderers: {},
     utilities: {},
-    assets: {}
+    assets: {},
+    systems: {}
 };
 
 MyGame.loader = function() {
@@ -32,10 +33,13 @@ MyGame.loader = function() {
             message: 'Components loaded',
             onComplete: null
         }, {
-            scripts: ['render/graphics', 'render/snake', 'render/animated-sprite', 'render/background'],
+            scripts: ['render/graphics', 'render/snake', 'render/animated-sprite', 'render/background', 'render/particle-system', 'systems/particle-system'],
             message: 'Rendering loaded',
             onComplete: null
         }, {
+            scrpts: ['systems/particle-system']
+        } 
+        ,{
             scripts: ['gameloop'],
             message: 'Gameplay model loaded',
             onComplete: null

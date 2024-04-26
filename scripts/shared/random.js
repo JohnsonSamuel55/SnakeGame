@@ -89,8 +89,8 @@ if(typeof exports !== 'undefined'){
 }
 else{
     this['random'] = {};
-    this['nextDouble'] = {};
-    this['nextRange'] = {};
-    this['nextCircleVector'] = {};
-    this['nextGaussian'] = {};
+    this['nextDouble'] = nextDouble;
+    this['nextRange'] = nextRange;
+    this['nextCircleVector'] = nextCircleVector;
+    this['nextGaussian'] = nextGaussian;
 }

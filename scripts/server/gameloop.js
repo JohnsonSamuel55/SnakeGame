@@ -124,7 +124,7 @@ function collided(){
             //If the client's head overlaps with any part of another snake
             for(let otherId in activeClients){
                 if(activeClients[otherId].id !== activeClients[clientId].id){
-                    let circles = {};
+                    let circles = activeClients[otherId].player.circles;
                     for( let circle in circles){
                         let circle2 = {
                             x: circle.center.x,
