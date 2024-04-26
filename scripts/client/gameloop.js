@@ -3,7 +3,7 @@
 // This function provides the "game" code.
 //
 //------------------------------------------------------------------
-MyGame.main = (function(graphics, renderer, input, components) {
+MyGame.main = (function(graphics, renderer, input, components, systems) {
   'use strict';
 
   let lastTimeStamp = performance.now(),
@@ -27,6 +27,23 @@ MyGame.main = (function(graphics, renderer, input, components) {
         spriteTime: [200, 200, 200, 200, 200, 200]
         }, graphics
       );
+    //Load assets for particle system
+    let particlesFire = systems.ParticleSystem({
+            center: { x: 300, y: 300 },
+            size: { mean: 10, stdev: 4 },
+            speed: { mean: 50, stdev: 25 },
+            lifetime: { mean: 4, stdev: 1 }
+        },
+        graphics);
+    let particlesSmoke = systems.ParticleSystem({
+            center: { x: 300, y: 300 },
+            size: { mean: 10, stdev: 4 },
+            speed: { mean: 50, stdev: 25 },
+            lifetime: { mean: 4, stdev: 1 }
+        },
+        graphics);
+    let renderFire = renderer.ParticleSystem(particlesFire, graphics, 'assets/fire.png');
+    let renderSmoke = renderer.ParticleSystem(particlesSmoke, graphics, 'assets/smoke-2.png');
 
   socket.on(NetworkIds.CONNECT_ACK, data => {
     networkQueue.enqueue({
@@ -179,6 +196,9 @@ MyGame.main = (function(graphics, renderer, input, components) {
   function update(elapsedTime) {
     foodRenderer.update(elapsedTime);
     // graphics.updateViewport({x: graphics.viewport.x + .001, y: graphics.viewport.y + .001});
+        // Tell the existing particles to update themselves
+        particlesSmoke.update(elapsedTime);
+        particlesFire.update(elapsedTime);
   }
   
   function render() {
@@ -190,6 +210,9 @@ MyGame.main = (function(graphics, renderer, input, components) {
     for (let otherSnake in playerOthers) {
       snakeRenderer.render(playerOthers[otherSnake].model);
     }
+    //Uncomment to render the particle effects
+    //renderSmoke.render();
+    //renderFire.render();
   }
   
   function gameLoop(time) {
@@ -223,4 +246,4 @@ MyGame.main = (function(graphics, renderer, input, components) {
       initialize: initialize
   };
 
-}(MyGame.graphics, MyGame.renderers, MyGame.input, MyGame.components));
+}(MyGame.graphics, MyGame.renderers, MyGame.input, MyGame.components, MyGame.systems));
