@@ -80,7 +80,6 @@ function collided(){
     function circlesOverlap(circle1, circle2) {
         // Calculate the distance between the center points of the circles
         const distance = Math.sqrt((circle2.x - circle1.x) ** 2 + (circle2.y - circle1.y) ** 2);
-    
         // Sum of the radii of the circles
         const sumRadii = circle1.radius + circle2.radius;
     
@@ -113,6 +112,7 @@ function collided(){
         
         //if the client's head overlaps with a wall
         if (circleLineIntersect(circle1, leftWall) || circleLineIntersect(circle1, rightWall) || circleLineIntersect(circle1, topWall) || circleLineIntersect(circle1, bottomWall)){
+            activeClients[clientId].player.alive = false;
             for(let id in activeClients){ 
                 activeClients[id].socket.emit(NetworkIds.UPDATE_DEATH, {
                     clientId: clientId
@@ -129,10 +129,11 @@ function collided(){
                         let circle2 = {
                             x: circle.center.x,
                             y: circle.center.y,
-                            radius: circle.size/2,
+                            radius: activeClients[otherId].player.size / 2,
                             type: circle.type
                         };
-                        if(circlesOverlap(circle1, circle2)){ 
+                        if(circlesOverlap(circle1, circle2)){
+                            activeClients[clientId].player.alive = false;
                             for(let id in activeClients){ 
                                 activeClients[id].socket.emit(NetworkIds.UPDATE_DEATH, {
                                     clientId: clientId
@@ -143,19 +144,29 @@ function collided(){
                 }
             }
         }
-        if(clientAlive){
+        else {
+            for (let circle of activeClients[clientId].player.circles) {
+                let newFoodObject = Food.create(foodId, true, circle.center);
+                newFood[foodId] = newFoodObject;
+                food[foodId] = newFoodObject;
+                foodId++;
+            }
+        }
+        if (clientAlive){
             //if the client's head overlaps with a food the food is consumed by the client
             let toRemove = [];
-            for(let piece in food){
+            for (let piece in food){
+
                 let circle2 = {
                     x: food[piece].center.x,
                     y: food[piece].center.y,
-                    radius: food[piece].radius
+                    radius: food[piece].size
                 }
-                if(circlesOverlap(circle2, circle1)){
-                    //increase score        
+                if (circlesOverlap(circle2, circle1)){
+                    activeClients[clientId].player.increaseScore(food[piece].value)
                     toRemove.push(piece); // Storing the id as key for quick lookup
-                    consumedFood[piece.id] = piece;
+                    consumedFood[piece] = piece;
+                    delete food[piece];
                 }
             }
             // Remove items from the food array based on keys stored in toRemove
@@ -169,14 +180,13 @@ function update(elapsedTime, currentTime) {
         activeClients[clientId].player.update(elapsedTime);
     }
 
-    //before this, update eaten food
+    collided();
     for (let i = Object.keys(food).length - 1; i < MAX_FOOD; i++) {
-        let newFoodObject = Food.create(foodId);
+        let newFoodObject = Food.create(foodId, false);
         food[foodId] = newFoodObject;
         newFood[foodId] = newFoodObject;
         foodId++;
     }
-    collided();
 }
 
 function updateClients(elapsedTime) {
@@ -196,6 +206,18 @@ function updateClients(elapsedTime) {
                     activeClients[otherId].socket.emit(NetworkIds.UPDATE_OTHER, update);
                 }
             }
+        }
+    }
+
+    if (Object.keys(consumedFood).length > 0) {
+        for (let clientId in activeClients) {
+            activeClients[clientId].socket.emit(NetworkIds.DELETE_FOOD, { consumedFood });
+        }
+    }
+
+    if (Object.keys(newFood).length > 0) {
+        for (let clientId in activeClients) {
+            activeClients[clientId].socket.emit(NetworkIds.ADD_FOOD, { newFood })
         }
     }
 
@@ -290,7 +312,7 @@ function initialize(httpServer) {
     activeClients = {};
     initializeSocketIO(httpServer);
     for (let i = 0; i < MAX_FOOD; i++) {
-        food[i] = Food.create(foodId++);
+        food[i] = Food.create(foodId++, false);
     }
     gameLoop(present(), 0);
 }

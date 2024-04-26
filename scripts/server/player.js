@@ -15,6 +15,7 @@ function createPlayer() {
   let isInvinsible = true;
   let invinsibleTimer = 2000;
   let reportUpdate = false;
+  let alive = true;
 
   function spawn() {
     let center = {x: .25, y: .5};
@@ -53,7 +54,7 @@ function createPlayer() {
 
   function increaseScore(points) {
     score += points;
-    if (score % pointsToIncreaseCircleCount === 0) {
+    if (score % pointsToIncreaseCircleCount === 0 || points === 10) {
       let previousCircle = circles[circles.length - 1];
       let newCircle = {
         center: {x: previousCircle.center.x - Math.cos(previousCircle.direction) * size * .82, y: previousCircle.center.y - Math.sin(previousCircle.direction) * size * .82},
@@ -68,13 +69,15 @@ function createPlayer() {
   }
 
   function update(elapsedTime) {
-    reportUpdate = true;
-    invinsibleTimer -= elapsedTime;
-    if (invinsibleTimer <= 0) {
-      isInvinsible = false;
-    }
-    for (let circle of circles) {
-      circle.update(elapsedTime);
+    if (alive) {
+      reportUpdate = true;
+      invinsibleTimer -= elapsedTime;
+      if (invinsibleTimer <= 0) {
+        isInvinsible = false;
+      }
+      for (let circle of circles) {
+        circle.update(elapsedTime);
+      }
     }
   }
 
@@ -89,7 +92,9 @@ function createPlayer() {
     set id(value) { id = value; },
     get size() { return size },
     get reportUpdate() { return reportUpdate },
-    set reportUpdate(value) { reportUpdate = value; }
+    set reportUpdate(value) { reportUpdate = value; },
+    get alive() { return alive; },
+    set alive(value) { alive = value; }
   }
 }
 

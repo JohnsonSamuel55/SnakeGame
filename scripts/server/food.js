@@ -1,36 +1,40 @@
 let random = require('../shared/random');
 let Food = require('../shared/food-types');
 
-function createFood(foodId) {
+function createFood(foodId, isCorpse, coords) {
   'use strict';
-  let that = {};
   let center = {x: random.nextDouble(), y: random.nextDouble()};
   let type;
   let value;
   let id = foodId;
   let size = .02
-  switch (random.nextRange(0,6)) {
-    case 0:
-      type = Food.MAPLE;
-      value = 1;
-      break;
-    case 1:
-      type = Food.CHOCOLATE;
-      value = 2;
-      break;
-    case 2:
-      type = Food.JELLY;
-      value = 3;
-      break;
-    case 3:
-      type = Food.POWDERED;
-      value = 4;
-      size = .03;
-      break;
-    case 4:
-      type = Food.CANDY;
-      value = 5;
-      break;
+  console.log(isCorpse)
+  if (!isCorpse) {
+    switch (random.nextRange(0,4)) {
+      case 0:
+        type = Food.MAPLE;
+        value = 2;
+        break;
+      case 1:
+        type = Food.CHOCOLATE;
+        value = 2;
+        break;
+      case 2:
+        type = Food.JELLY;
+        value = 2;
+        break;
+      case 3:
+        type = Food.CANDY;
+        value = 2;
+        break;
+      }
+    }
+  else {
+    console.log(center)
+    type = Food.POWDERED;
+    size = .025;
+    value = 10;
+    center = {x: coords.x, y: coords.y};
   }
 
   return {
@@ -38,8 +42,9 @@ function createFood(foodId) {
     type,
     value,
     id,
-    size
+    size,
+    coords
   };
 }
 
-module.exports.create = () => createFood();
+module.exports.create = (foodId, isCorpse, center) => createFood(foodId, isCorpse, center);

@@ -75,6 +75,14 @@
         'UPDATE_DEATH': {
             value: 'update-death',
             writable: false
+        },
+        'ADD_FOOD': {
+            value: 'add_food',
+            writable: false
+        },
+        'DELETE_FOOD': {
+            value: 'delete-food',
+            writable: false
         }
     });
 

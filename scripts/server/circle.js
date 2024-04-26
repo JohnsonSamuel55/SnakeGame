@@ -21,8 +21,13 @@ function circle(spec) {
     center.y += speed * elapsedTime * Math.sin(direction);
   }
 
+  function setType(newType) {
+    type = newType;
+  }
+
   return {
     update,
+    setType,
     get center() { return center; },
     get type() { return type; },
     get direction() { return direction; },

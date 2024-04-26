@@ -128,6 +128,35 @@ MyGame.graphics = (function() {
         context.fill();
     }
 
+    function drawRoundedRect(x, y, width, height, radius) {
+        x = x * canvas.width / 100;
+        y = y * canvas.height / 100;
+        width = width * canvas.width / 100;
+        height = height * canvas.height / 100;
+        radius = radius * canvas.height / 100;
+        context.save();
+        context.beginPath();
+        context.moveTo(x + radius, y);
+        context.arcTo(x + width, y, x + width, y + height, radius);
+        context.arcTo(x + width, y + height, x, y + height, radius);
+        context.arcTo(x, y + height, x, y, radius);
+        context.arcTo(x, y, x + width, y, radius);
+        context.closePath();
+
+        context.fillStyle = 'black';
+        context.globalAlpha = 0.5
+        context.fill()
+        context.restore();
+    }
+
+    function drawText(text, color, size, position) {
+        context.save();
+        context.font = `${size}px Arial`;
+        context.fillStyle = color;
+        context.fillText(text, position.x * canvas.width / 100, position.y * canvas.height / 100);
+        context.restore();
+    }
+
     function updateViewport(newViewport) {
         viewport = newViewport;
     }
@@ -141,6 +170,8 @@ MyGame.graphics = (function() {
         drawSubTexture: drawSubTexture,
         drawCircle: drawCircle,
         updateViewport: updateViewport,
+        drawRoundedRect: drawRoundedRect,
+        drawText: drawText,
         get viewport() { return viewport } 
     };
 }());

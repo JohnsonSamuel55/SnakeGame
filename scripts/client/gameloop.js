@@ -94,15 +94,29 @@ MyGame.main = (function(graphics, renderer, input, components, systems) {
     });
   });
 
+  socket.on(NetworkIds.ADD_FOOD, data => {
+    networkQueue.enqueue({
+      type: NetworkIds.ADD_FOOD,
+      data: data
+    });
+  });
+
+  socket.on(NetworkIds.DELETE_FOOD, data => {
+    networkQueue.enqueue({
+      type: NetworkIds.DELETE_FOOD,
+      data: data
+    });
+  });
+
   function connectPlayerSelf(data){
     console.log("Self Connected");
     playerSelf.model.circles = data.circles;
+    console.log(data.clientId)
     playerSelf.model.id = data.clientId;
     playerSelf.model.alive = true;
     playerSelf.model.size = data.size;
 
     food = data.food;
-    console.log(data.food)
     graphics.updateViewport({x: data.circles[0].center.x - (1 / 6), y: data.circles[0].center.y - (1 / 6)});
   }
 
@@ -132,10 +146,10 @@ MyGame.main = (function(graphics, renderer, input, components, systems) {
 
   function updatePlayerTurnPoints(data){
     if (data.clientId == playerSelf.model.id) {
-      playerSelf.addTurnPoint(data.turnPoint);
+      playerSelf.model.addTurnPoint(data.turnPoint);
     }
     else {
-      playerOthers[data.clientId].addTurnPoint(data.turnPoint);
+      playerOthers[data.clientId].model.addTurnPoint(data.turnPoint);
     }
     //Update the self player based on data from the server
   }
@@ -150,12 +164,24 @@ MyGame.main = (function(graphics, renderer, input, components, systems) {
     //Then update based on data from server
   }
 
+  function addNewFood(data) {
+    for (let newFood in data.newFood) {
+      food[newFood] = data.newFood[newFood]
+    }
+  }
+
+  function deleteFood(data) {
+    for (let deleteFood in data.consumedFood) {
+      delete food[deleteFood]
+    }
+  }
+
   function updatePlayerDeath(data) {
-    if (data.id == playerSelf.clientId) {
-      playerSelf.alive = false;
+    if (data.clientId == playerSelf.model.id) {
+      playerSelf.model.alive = false;
     }
     else {
-      playerOthers[data.clientId].alive = false;
+      playerOthers[data.clientId].model.alive = false;
     }
   }
   
@@ -189,6 +215,12 @@ MyGame.main = (function(graphics, renderer, input, components, systems) {
             case NetworkIds.ADD_TURNPOINT:
                 updatePlayerTurnPoints(message.data);
                 break;
+            case NetworkIds.ADD_FOOD:
+                addNewFood(message.data);
+                break;
+            case NetworkIds.DELETE_FOOD:
+                deleteFood(message.data);
+                break;
         }
     }
   }
@@ -197,8 +229,8 @@ MyGame.main = (function(graphics, renderer, input, components, systems) {
     foodRenderer.update(elapsedTime);
     // graphics.updateViewport({x: graphics.viewport.x + .001, y: graphics.viewport.y + .001});
         // Tell the existing particles to update themselves
-        particlesSmoke.update(elapsedTime);
-        particlesFire.update(elapsedTime);
+    particlesSmoke.update(elapsedTime);
+    particlesFire.update(elapsedTime);
   }
   
   function render() {
@@ -206,7 +238,9 @@ MyGame.main = (function(graphics, renderer, input, components, systems) {
     for (let model in food) {
       foodRenderer.render(food[model]);
     }
-    snakeRenderer.render(playerSelf.model);
+    if (playerSelf.model.alive) {
+      snakeRenderer.render(playerSelf.model);
+    }
     for (let otherSnake in playerOthers) {
       snakeRenderer.render(playerOthers[otherSnake].model);
     }
