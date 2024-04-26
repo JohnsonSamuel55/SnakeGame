@@ -101,81 +101,84 @@ function collided(){
     }
     //for each client
     for(let clientId in activeClients){
-        //find the client's head
-        let currentHead = activeClients[clientId].player.circles[0];
-        let circle1 ={
-            x: currentHead.center.x,
-            y: currentHead.center.y,
-            radius: activeClients[clientId].player.size / 2
-        };
-        let clientAlive = true;
-        
-        //if the client's head overlaps with a wall
-        if (circleLineIntersect(circle1, leftWall) || circleLineIntersect(circle1, rightWall) || circleLineIntersect(circle1, topWall) || circleLineIntersect(circle1, bottomWall)){
-            activeClients[clientId].player.alive = false;
-            for(let id in activeClients){ 
-                activeClients[id].socket.emit(NetworkIds.UPDATE_DEATH, {
-                    clientId: clientId
-                });
+        if (activeClients[clientId].player.alive) {
+            //find the client's head
+            let currentHead = activeClients[clientId].player.circles[0];
+            let circle1 ={
+                x: currentHead.center.x,
+                y: currentHead.center.y,
+                radius: activeClients[clientId].player.size / 2
+            };
+            let clientAlive = true;
+            
+            //if the client's head overlaps with a wall
+            if (circleLineIntersect(circle1, leftWall) || circleLineIntersect(circle1, rightWall) || circleLineIntersect(circle1, topWall) || circleLineIntersect(circle1, bottomWall)){
+                activeClients[clientId].player.alive = false;
+                for(let id in activeClients){ 
+                    activeClients[id].socket.emit(NetworkIds.UPDATE_DEATH, {
+                        clientId: clientId
+                    });
+                }
+                clientAlive = false;
             }
-            clientAlive = false;
-        }
-        if(clientAlive){
-            //If the client's head overlaps with any part of another snake
-            for(let otherId in activeClients){
-                if(activeClients[otherId].id !== activeClients[clientId].id){
-                    let circles = activeClients[otherId].player.circles;
-                    for( let circle in circles){
-                        let circle2 = {
-                            x: circle.center.x,
-                            y: circle.center.y,
-                            radius: activeClients[otherId].player.size / 2,
-                            type: circle.type
-                        };
-                        if(circlesOverlap(circle1, circle2)){
-                            activeClients[clientId].player.alive = false;
-                            for(let id in activeClients){ 
-                                activeClients[id].socket.emit(NetworkIds.UPDATE_DEATH, {
-                                    clientId: clientId
-                                });
+            if(clientAlive){
+                //If the client's head overlaps with any part of another snake
+                for(let otherId in activeClients){
+                    if(activeClients[otherId].id !== activeClients[clientId].id){
+                        let circles = activeClients[otherId].player.circles;
+                        for( let circle in circles){
+                            let circle2 = {
+                                x: circle.center.x,
+                                y: circle.center.y,
+                                radius: activeClients[otherId].player.size / 2,
+                                type: circle.type
+                            };
+                            if(circlesOverlap(circle1, circle2)){
+                                activeClients[clientId].player.alive = false;
+                                for(let id in activeClients){ 
+                                    activeClients[id].socket.emit(NetworkIds.UPDATE_DEATH, {
+                                        clientId: clientId
+                                    });
+                                }
                             }
                         }
                     }
                 }
             }
-        }
-        else {
-            for (let circle of activeClients[clientId].player.circles) {
-                let newFoodObject = Food.create(foodId, true, circle.center);
-                newFood[foodId] = newFoodObject;
-                food[foodId] = newFoodObject;
-                foodId++;
-            }
-        }
-        if (clientAlive){
-            //if the client's head overlaps with a food the food is consumed by the client
-            let toRemove = [];
-            for (let piece in food){
-
-                let circle2 = {
-                    x: food[piece].center.x,
-                    y: food[piece].center.y,
-                    radius: food[piece].size
-                }
-                if (circlesOverlap(circle2, circle1)){
-                    activeClients[clientId].player.increaseScore(food[piece].value)
-                    toRemove.push(piece); // Storing the id as key for quick lookup
-                    consumedFood[piece] = piece;
-                    delete food[piece];
+            else {
+                for (let circle of activeClients[clientId].player.circles) {
+                    let newFoodObject = Food.create(foodId, true, circle.center);
+                    newFood[foodId] = newFoodObject;
+                    food[foodId] = newFoodObject;
+                    foodId++;
                 }
             }
-            // Remove items from the food array based on keys stored in toRemove
-            toRemove.forEach((key) => delete food[key]);
+            if (clientAlive){
+                //if the client's head overlaps with a food the food is consumed by the client
+                let toRemove = [];
+                for (let piece in food){
+    
+                    let circle2 = {
+                        x: food[piece].center.x,
+                        y: food[piece].center.y,
+                        radius: food[piece].size
+                    }
+                    if (circlesOverlap(circle2, circle1)){
+                        activeClients[clientId].player.increaseScore(food[piece].value)
+                        toRemove.push(piece); // Storing the id as key for quick lookup
+                        consumedFood[piece] = piece;
+                    }
+                }
+                // Remove items from the food array based on keys stored in toRemove
+                toRemove.forEach((key) => delete food[key]);
+            }
         }
     }
 }
 
 function update(elapsedTime, currentTime) {
+    consumedFood = {};
+    newFood = {};
     for (let clientId in activeClients){
         activeClients[clientId].player.update(elapsedTime);
     }
@@ -300,6 +303,7 @@ function initializeSocketIO(httpServer) {
         });
 
         socket.on('disconnect', function() {
+            console.log(`disconnected ${socket.id}`);
             delete activeClients[socket.id];
             notifyDisconnect(socket.id);
         });

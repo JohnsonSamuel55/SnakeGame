@@ -8,7 +8,6 @@ function createFood(foodId, isCorpse, coords) {
   let value;
   let id = foodId;
   let size = .02
-  console.log(isCorpse)
   if (!isCorpse) {
     switch (random.nextRange(0,4)) {
       case 0:
@@ -30,7 +29,6 @@ function createFood(foodId, isCorpse, coords) {
       }
     }
   else {
-    console.log(center)
     type = Food.POWDERED;
     size = .025;
     value = 10;

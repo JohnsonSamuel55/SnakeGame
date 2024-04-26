@@ -111,7 +111,6 @@ MyGame.main = (function(graphics, renderer, input, components, systems) {
   function connectPlayerSelf(data){
     console.log("Self Connected");
     playerSelf.model.circles = data.circles;
-    console.log(data.clientId)
     playerSelf.model.id = data.clientId;
     playerSelf.model.alive = true;
     playerSelf.model.size = data.size;
@@ -172,7 +171,7 @@ MyGame.main = (function(graphics, renderer, input, components, systems) {
 
   function deleteFood(data) {
     for (let deleteFood in data.consumedFood) {
-      delete food[deleteFood]
+      delete food[data.consumedFood[deleteFood]];
     }
   }
 
@@ -267,7 +266,7 @@ MyGame.main = (function(graphics, renderer, input, components, systems) {
       
       for (let i = 0; i < 9; i++) {
         for (let j = 0; j < 9; j++) {
-          backgrounds.push(components.Background({center: {x: i / 9, y: j / 9}, texture: MyGame.assets['background']}));
+          backgrounds.push(components.Background({center: {x: j / 9, y: i / 9}, texture: MyGame.assets['background']}));
         }
       }
       
