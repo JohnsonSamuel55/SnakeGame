@@ -1,4 +1,30 @@
-    window.onload = function() {
+	function updateHighScore(score) {
+		var storedHighScores = localStorage.getItem('highScores');
+		storedHighScores = JSON.parse(storedHighScores);
+		storedHighScores = replaceAndSort(storedHighScores, score);
+		localStorage.setItem('highScores', JSON.stringify(storedHighScores));
+	}
+
+	function replaceAndSort(array, newValue) {
+		// Find the index of the minimum value
+		var minIndex = array.indexOf(Math.min(...array));
+
+		if(newValue < array[minIndex]) {
+			return array;
+		}
+		
+		// Replace the value at minIndex with newValue
+		array[minIndex] = newValue;
+		
+		// Sort the array
+		array.sort(function(a, b) {
+			return b - a;
+		});
+	
+		return array;
+	}
+	
+	window.onload = function() {
 		// Retrieve high scores from the browser storage
 		var storedHighScores = localStorage.getItem('highScores');
 		console.log(storedHighScores);
@@ -276,3 +302,5 @@ function handleControlsButtonClick() {
 
 		MyGame.loader();		
 	}
+
+	
