@@ -11,6 +11,28 @@
 			// Store the initial high scores
 			localStorage.setItem('highScores', JSON.stringify(highScores));
 		}
+
+		var CONTROL_KEYS_LEFT = localStorage.getItem('CONTROL_KEYS_LEFT');
+		var CONTROL_KEYS_UP = localStorage.getItem('CONTROL_KEYS_UP');
+		var CONTROL_KEYS_RIGHT = localStorage.getItem('CONTROL_KEYS_RIGHT');
+		var CONTROL_KEYS_DOWN = localStorage.getItem('CONTROL_KEYS_DOWN');
+		console.log(CONTROL_KEYS_LEFT);
+		console.log(CONTROL_KEYS_UP);
+		console.log(CONTROL_KEYS_RIGHT);
+		console.log(CONTROL_KEYS_DOWN);
+		if(CONTROL_KEYS_LEFT === null || CONTROL_KEYS_UP === null || CONTROL_KEYS_RIGHT === null || CONTROL_KEYS_DOWN === null) {
+			localStorage.setItem('CONTROL_KEYS_LEFT', CONTROL_KEYS.LEFT);
+			localStorage.setItem('CONTROL_KEYS_UP', CONTROL_KEYS.UP);
+			localStorage.setItem('CONTROL_KEYS_RIGHT', CONTROL_KEYS.RIGHT);
+			localStorage.setItem('CONTROL_KEYS_DOWN', CONTROL_KEYS.DOWN);
+		}
+		else {
+			CONTROL_KEYS.LEFT = CONTROL_KEYS_LEFT;
+			CONTROL_KEYS.UP = CONTROL_KEYS_UP;
+			CONTROL_KEYS.RIGHT = CONTROL_KEYS_RIGHT;
+			CONTROL_KEYS.DOWN = CONTROL_KEYS_DOWN;
+			
+		}
 	}
 	
 	// Global variables for control keys
@@ -196,6 +218,11 @@ function handleControlsButtonClick() {
         CONTROL_KEYS.RIGHT = keyMap[document.getElementById("rightKey").value];
         CONTROL_KEYS.DOWN = keyMap[document.getElementById("downKey").value];
         CONTROL_KEYS.PAUSE = keyMap[document.getElementById("pauseKey").value];
+
+		localStorage.setItem('CONTROL_KEYS_LEFT', CONTROL_KEYS.LEFT);
+		localStorage.setItem('CONTROL_KEYS_UP', CONTROL_KEYS.UP);
+		localStorage.setItem('CONTROL_KEYS_RIGHT', CONTROL_KEYS.RIGHT);
+		localStorage.setItem('CONTROL_KEYS_DOWN', CONTROL_KEYS.DOWN);
 
         // Hide the controls screen
         controlsScreen.style.display = "none";
