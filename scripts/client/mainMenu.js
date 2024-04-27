@@ -41,7 +41,7 @@
 			localStorage.setItem('highScores', JSON.stringify(highScores));
 		}
 
-		var PLAYER_NAME
+		var PLAYER_NAME = "Your Name";
 		var CONTROL_KEYS_LEFT = localStorage.getItem('CONTROL_KEYS_LEFT');
 		var CONTROL_KEYS_UP = localStorage.getItem('CONTROL_KEYS_UP');
 		var CONTROL_KEYS_RIGHT = localStorage.getItem('CONTROL_KEYS_RIGHT');
@@ -207,8 +207,6 @@ function handleControlKey(event) {
     }
 }
 
-var controlsButton = true;
-
 function handleControlsButtonClick() {
     // Hide the main menu
     document.getElementById("mainMenu").style.display = "none";
@@ -256,6 +254,7 @@ function handleControlsButtonClick() {
 
         // Hide the controls screen
         controlsScreen.style.display = "none";
+		document.getElementById("nameInputScreen").style.display = "none";
 
         // Show the main menu again
         document.getElementById("mainMenu").style.display = "block";
@@ -292,20 +291,14 @@ function handleControlsButtonClick() {
 		document.addEventListener("keydown", handleKeyPress);
 	}
 	
-	
-
-	// Function to handle the start button click
-	function handleStartButtonClick() {
+	function next() {
+		PLAYER_NAME = document.getElementById("nameInput").value;
+		console.log(PLAYER_NAME);
+		document.getElementById("nameInputScreen").style.display = "none";
+		document.getElementById("mainMenu").style.display = "block"
 		document.getElementById("gameCanvas").style.display = "block"; // Make gameCanvas visible
-	
-		// Hide each button
-		var buttons = document.querySelectorAll("#mainMenu button");
-		buttons.forEach(function(button) {
-		  button.style.display = "none";
-		});
-
 		MyGame.loader();
-		
+
 		// Function to handle the escape key press
 		function handleKeyPress(event) {
 			if (event.keyCode === 27) { // Check if the pressed key is the Escape key
@@ -330,6 +323,80 @@ function handleControlsButtonClick() {
 	
 		// Add event listener for keydown event
 		document.addEventListener("keydown", handleKeyPress);
+	}
+
+	// Function to handle the start button click
+	function handleStartButtonClick() {
+	
+		// Hide each button
+		var buttons = document.querySelectorAll("#mainMenu button");
+		buttons.forEach(function(button) {
+		  button.style.display = "none";
+		});		
+		
+		// Hide the main menu
+		document.getElementById("mainMenu").style.display = "none";
+    
+		// Display the controls screen
+		var controlsScreen = document.getElementById("controlsScreen");
+		controlsScreen.style.display = "block";
+	
+		// Populate input fields with current control keys
+		document.getElementById("leftKey").value = reversedKeyMap[CONTROL_KEYS.LEFT];
+		document.getElementById("upKey").value = reversedKeyMap[CONTROL_KEYS.UP];
+		document.getElementById("rightKey").value = reversedKeyMap[CONTROL_KEYS.RIGHT];
+		document.getElementById("downKey").value = reversedKeyMap[CONTROL_KEYS.DOWN];
+	
+		// Function to handle the escape key press
+		function handleKeyPress(event) {
+			if (event.keyCode === 27) { // Check if the pressed key is the Escape key
+				// Hide the controls screen
+				controlsScreen.style.display = "none";
+
+				
+	
+				// Show the main menu again
+				document.getElementById("mainMenu").style.display = "block";
+
+				// Show each button
+				var buttons = document.querySelectorAll("#mainMenu button");
+				buttons.forEach(function(button) {
+				button.style.display = ""; // Sets display property to default (block or inline-block)
+				});
+	
+				// Remove the event listener
+				document.removeEventListener("keydown", handleKeyPress);
+			}
+		}
+	
+		// Add event listener for keydown event
+		document.addEventListener("keydown", handleKeyPress);
+	
+		// Save button click handler
+		var saveControlsButton = document.getElementById("saveControlsButton");
+		saveControlsButton.addEventListener("click", function() {
+			// Update control keys based on input fields
+			CONTROL_KEYS.LEFT = keyMap[document.getElementById("leftKey").value];
+			CONTROL_KEYS.UP = keyMap[document.getElementById("upKey").value];
+			CONTROL_KEYS.RIGHT = keyMap[document.getElementById("rightKey").value];
+			CONTROL_KEYS.DOWN = keyMap[document.getElementById("downKey").value];
+	
+			localStorage.setItem('CONTROL_KEYS_LEFT', CONTROL_KEYS.LEFT);
+			localStorage.setItem('CONTROL_KEYS_UP', CONTROL_KEYS.UP);
+			localStorage.setItem('CONTROL_KEYS_RIGHT', CONTROL_KEYS.RIGHT);
+			localStorage.setItem('CONTROL_KEYS_DOWN', CONTROL_KEYS.DOWN);
+	
+			// Hide the controls screen
+			controlsScreen.style.display = "none";
+			document.getElementById("mainMenu").style.display = "none";
+	
+			// Show the main menu again
+			document.getElementById("nameInputScreen").style.display = "block";
+	
+			// Remove the event listener
+			document.removeEventListener("keydown", handleKeyPress);
+		});
+
 	}
 
 	function showGameOverMessage(score, kills, highestPosition) {
@@ -359,4 +426,14 @@ function handleControlsButtonClick() {
 			});
 		});
 	}
+
+	document.addEventListener("keydown", function(event) {
+		if (event.keyCode === 27 && document.getElementById("nameInputScreen").style.display === "block") {
+			// Your code here
+			// For example, you can hide the nameInputScreen:
+			document.getElementById("nameInputScreen").style.display = "none";
+			handleStartButtonClick();
+		}
+	});
+	
 	
