@@ -1,6 +1,9 @@
 	function updateHighScore(score) {
 		var storedHighScores = localStorage.getItem('highScores');
 		storedHighScores = JSON.parse(storedHighScores);
+		if(storedHighScores === null) {
+			storedHighScores = [0, 0, 0, 0, 0];
+		}
 		storedHighScores = replaceAndSort(storedHighScores, score);
 		localStorage.setItem('highScores', JSON.stringify(storedHighScores));
 	}
@@ -204,6 +207,8 @@ function handleControlKey(event) {
     }
 }
 
+var controlsButton = true;
+
 function handleControlsButtonClick() {
     // Hide the main menu
     document.getElementById("mainMenu").style.display = "none";
@@ -319,6 +324,7 @@ function handleControlsButtonClick() {
 			}
 			if(event.keyCode === 80) {
 				showGameOverMessage(1, 2, 3);
+				
 			}
 		}
 	
