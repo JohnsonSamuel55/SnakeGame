@@ -211,6 +211,8 @@ function handleControlKey(event) {
 }
 
 function handleControlsButtonClick() {
+	var h2Element = document.querySelector('#controlsScreen h2');
+	h2Element.innerHTML = "Edit Controls";
     // Hide the main menu
     document.getElementById("mainMenu").style.display = "none";
     
@@ -296,6 +298,7 @@ function handleControlsButtonClick() {
 	
 	function next() {
 		PLAYER_NAME = document.getElementById("nameInput").value;
+		localStorage.setItem('PLAYER_NAME', PLAYER_NAME);
 		console.log(PLAYER_NAME);
 		document.getElementById("nameInputScreen").style.display = "none";
 		document.getElementById("mainMenu").style.display = "block"
@@ -330,6 +333,11 @@ function handleControlsButtonClick() {
 
 	// Function to handle the start button click
 	function handleStartButtonClick() {
+		if(localStorage.getItem('PLAYER_NAME')) {
+			document.getElementById("nameInput").placeholder = localStorage.getItem('PLAYER_NAME');
+		}
+		var h2Element = document.querySelector('#controlsScreen h2');
+		h2Element.innerHTML = "The snake will change direction based on keypress";
 	
 		// Hide each button
 		var buttons = document.querySelectorAll("#mainMenu button");
