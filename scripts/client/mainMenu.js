@@ -38,6 +38,7 @@
 			localStorage.setItem('highScores', JSON.stringify(highScores));
 		}
 
+		var PLAYER_NAME
 		var CONTROL_KEYS_LEFT = localStorage.getItem('CONTROL_KEYS_LEFT');
 		var CONTROL_KEYS_UP = localStorage.getItem('CONTROL_KEYS_UP');
 		var CONTROL_KEYS_RIGHT = localStorage.getItem('CONTROL_KEYS_RIGHT');
@@ -216,7 +217,6 @@ function handleControlsButtonClick() {
     document.getElementById("upKey").value = reversedKeyMap[CONTROL_KEYS.UP];
     document.getElementById("rightKey").value = reversedKeyMap[CONTROL_KEYS.RIGHT];
     document.getElementById("downKey").value = reversedKeyMap[CONTROL_KEYS.DOWN];
-    document.getElementById("pauseKey").value = reversedKeyMap[CONTROL_KEYS.PAUSE];
 
     // Function to handle the escape key press
     function handleKeyPress(event) {
@@ -243,7 +243,6 @@ function handleControlsButtonClick() {
         CONTROL_KEYS.UP = keyMap[document.getElementById("upKey").value];
         CONTROL_KEYS.RIGHT = keyMap[document.getElementById("rightKey").value];
         CONTROL_KEYS.DOWN = keyMap[document.getElementById("downKey").value];
-        CONTROL_KEYS.PAUSE = keyMap[document.getElementById("pauseKey").value];
 
 		localStorage.setItem('CONTROL_KEYS_LEFT', CONTROL_KEYS.LEFT);
 		localStorage.setItem('CONTROL_KEYS_UP', CONTROL_KEYS.UP);
