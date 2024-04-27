@@ -398,7 +398,6 @@ function handleControlsButtonClick() {
 	}
 
 	function showGameOverMessage(score, kills, highestPosition) {
-		updateHighScore(score);
 		// Display the game over message
 		var gameOverMessage = document.getElementById("gameOverMessage");
 		gameOverMessage.style.display = "flex";
@@ -411,6 +410,7 @@ function handleControlsButtonClick() {
 		// Add event listener for restart button click
 		var restartButton = document.getElementById("restartButton");
 		restartButton.addEventListener("click", function() {
+			updateHighScore(score);
 			// Hide the game over message
 			gameOverMessage.style.display = "none";
 	
