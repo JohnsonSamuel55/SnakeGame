@@ -163,6 +163,11 @@ MyGame.main = (function(graphics, renderer, input, components, systems) {
   function updatePlayerOther(data){
     //Check that the player is in the playerOthers array
     //Then update based on data from server
+    if (playerOthers.hasOwnProperty(data.clientId)) {
+      console.log("updating other player")
+      let model = playerOthers[data.clientId].model;
+      model.state.circles = data.circles;
+    }
   }
 
   function addNewFood(data) {
@@ -274,7 +279,14 @@ MyGame.main = (function(graphics, renderer, input, components, systems) {
       console.log('game initializing...');
 
       //Create the keyboard handlers and register the keyboard commands
-      
+
+      if(localStorage.getItem('CONTROL_KEYS_LEFT') == null || localStorage.getItem('CONTROL_KEYS_UP') == null ||
+        localStorage.getItem('CONTROL_KEYS_RIGHT') == null ||localStorage.getItem('CONTROL_KEYS_DOWN') == null) {
+        localStorage.setItem('CONTROL_KEYS_LEFT', 37);
+        localStorage.setItem('CONTROL_KEYS_UP', 38);
+        localStorage.setItem('CONTROL_KEYS_RIGHT', 39);
+        localStorage.setItem('CONTROL_KEYS_DOWN', 40);
+      }      
       for (let i = 0; i < 9; i++) {
         for (let j = 0; j < 9; j++) {
           backgrounds.push(components.Background({center: {x: j / 9, y: i / 9}, texture: MyGame.assets['background']}));

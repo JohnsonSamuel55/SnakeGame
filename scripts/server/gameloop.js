@@ -158,7 +158,7 @@ function collided(){
                                 radius: activeClients[otherId].player.size / 2,
                                 type: circle.type
                             };
-                            if(circlesOverlap(circle1, circle2)){
+                            if (!activeClients[clientId].player.invinsible && circlesOverlap(circle1, circle2)){
                                 activeClients[clientId].player.alive = false;
                                 for(let id in activeClients){ 
                                     activeClients[id].socket.emit(NetworkIds.UPDATE_DEATH, {
@@ -170,19 +170,11 @@ function collided(){
                     }
                 }
             }
-            else {
-                for (let circle of activeClients[clientId].player.circles) {
-                    let newFoodObject = Food.create(foodId, true, circle.center);
-                    newFood[foodId] = newFoodObject;
-                    food[foodId] = newFoodObject;
-                    foodId++;
-                }
-            }
             if (clientAlive){
                 //if the client's head overlaps with a food the food is consumed by the client
                 let toRemove = [];
                 for (let piece in food){
-    
+                    
                     let circle2 = {
                         x: food[piece].center.x,
                         y: food[piece].center.y,
@@ -196,6 +188,14 @@ function collided(){
                 }
                 // Remove items from the food array based on keys stored in toRemove
                 toRemove.forEach((key) => delete food[key]);
+            }
+            else {
+                for (let circle of activeClients[clientId].player.circles) {
+                    let newFoodObject = Food.create(foodId, true, circle.center);
+                    newFood[foodId] = newFoodObject;
+                    food[foodId] = newFoodObject;
+                    foodId++;
+                }
             }
         }
     }
