@@ -305,7 +305,7 @@ function handleControlsButtonClick() {
 		// Function to handle the escape key press
 		function handleKeyPress(event) {
 			if (event.keyCode === 27) { // Check if the pressed key is the Escape key
-				// Hide the credits screen
+				// Hide the game screen
 				document.getElementById("gameCanvas").style.display = "none";
 	
 				// Show each button
@@ -318,10 +318,40 @@ function handleControlsButtonClick() {
 				// Remove the event listener
 				document.removeEventListener("keydown", handleKeyPress);
 			}
+			if(event.keyCode === 80) {
+				showGameOverMessage(1, 2, 3);
+			}
 		}
 	
 		// Add event listener for keydown event
 		document.addEventListener("keydown", handleKeyPress);
 	}
 
+	function showGameOverMessage(score, kills, highestPosition) {
+		updateHighScore(score);
+		// Display the game over message
+		var gameOverMessage = document.getElementById("gameOverMessage");
+		gameOverMessage.style.display = "flex";
+	
+		// Populate the game over content with the score, kills, and highest position
+		document.getElementById("gameOverScore").textContent = score;
+		document.getElementById("gameOverKills").textContent = kills;
+		document.getElementById("gameOverPosition").textContent = highestPosition;
+	
+		// Add event listener for restart button click
+		var restartButton = document.getElementById("restartButton");
+		restartButton.addEventListener("click", function() {
+			// Hide the game over message
+			gameOverMessage.style.display = "none";
+	
+			// Hide the game screen
+			document.getElementById("gameCanvas").style.display = "none";
+	
+			// Show each button
+			var buttons = document.querySelectorAll("#mainMenu button");
+			buttons.forEach(function(button) {
+			button.style.display = ""; // Sets display property to default (block or inline-block)
+			});
+		});
+	}
 	
