@@ -16,6 +16,7 @@ function createPlayer() {
   let invinsibleTimer = 2000;
   let reportUpdate = false;
   let alive = true;
+  let speed = 0.00005
 
   function spawn() {
     let center = {x: .25, y: .5};
@@ -24,7 +25,7 @@ function createPlayer() {
         type: CircleTypes.HEAD,
         turnPoints: [],
         direction: Directions.EAST,
-        speed: 0.0001
+        speed: speed
       }));
     for (let i = 1; i < 4; i++) {
       circles.push(Circle.create({
@@ -32,7 +33,7 @@ function createPlayer() {
         type: CircleTypes.BODY,
         turnPoints: [],
         direction: Directions.EAST,
-        speed: 0.0001
+        speed: speed
       }));
     }
     circles.push(Circle.create({
@@ -40,7 +41,7 @@ function createPlayer() {
       type: CircleTypes.TAIL,
       turnPoints: [],
       direction: Directions.EAST,
-      speed: 0.0001
+      speed: speed
     }));
     isInvinsible = true;
     // for (let i = 0; i < 5; i++) {
@@ -61,7 +62,7 @@ function createPlayer() {
         type: CircleTypes.TAIL,
         turnPoints: previousCircle.turnPoints,
         direction: previousCircle.direction,
-        speed: 0.0001
+        speed: speed
       };
       previousCircle.setType(CircleTypes.BODY);
       circles.push(Circle.create(newCircle));
@@ -84,7 +85,7 @@ function createPlayer() {
   function updateDirection(newDirection) {
     circles[0].direction = newDirection;
     for (let i = 1; i < circles.length; i++) {
-      circles[i].turnPoints.push({center: {x: circles[0].center.x, y: circles[0].center.y}, directionAfter: newDirection});
+      circles[i].turnPoints.unshift({center: {x: circles[0].center.x, y: circles[0].center.y}, directionAfter: newDirection});
     }
   }
 
