@@ -5,6 +5,7 @@ MyGame.components.Snake = function() {
   let id;
   let alive = true;
   let size = 0.001;
+  let score = 0;
 
   Object.defineProperty(that, 'circles', {
     get: () => circles,
@@ -25,6 +26,11 @@ MyGame.components.Snake = function() {
     get: () => id,
     set: (value) => { id = value; }
   });
+
+  Object.defineProperty(that, 'score', {
+    get: () => score,
+    set: (value) => { score = value; } 
+  })
 
   that.update = function(elapsedTime) {
     

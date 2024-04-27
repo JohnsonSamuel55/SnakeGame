@@ -63,6 +63,9 @@ MyGame.loader = function() {
         }, {
             key: 'background',
             source: 'assets/textures/background.png'
+        }, {
+            key: 'black',
+            source: 'assets/textures/black.png'
         }];
     
     function loadScripts(scripts, onComplete) {
