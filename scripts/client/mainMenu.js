@@ -41,6 +41,9 @@
 			localStorage.setItem('highScores', JSON.stringify(highScores));
 		}
 
+		var score = 0;
+		var kills = 0;
+		var highestPlace = 0;
 		var PLAYER_NAME = "Your Name";
 		var CONTROL_KEYS_LEFT = localStorage.getItem('CONTROL_KEYS_LEFT');
 		var CONTROL_KEYS_UP = localStorage.getItem('CONTROL_KEYS_UP');
