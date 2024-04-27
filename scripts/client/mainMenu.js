@@ -300,7 +300,28 @@ function handleControlsButtonClick() {
 		  button.style.display = "none";
 		});
 
-		MyGame.loader();		
+		MyGame.loader();
+		
+		// Function to handle the escape key press
+		function handleKeyPress(event) {
+			if (event.keyCode === 27) { // Check if the pressed key is the Escape key
+				// Hide the credits screen
+				document.getElementById("gameCanvas").style.display = "none";
+	
+				// Show each button
+				var buttons = document.querySelectorAll("#mainMenu button");
+				buttons.forEach(function(button) {
+				button.style.display = ""; // Sets display property to default (block or inline-block)
+				});
+
+	
+				// Remove the event listener
+				document.removeEventListener("keydown", handleKeyPress);
+			}
+		}
+	
+		// Add event listener for keydown event
+		document.addEventListener("keydown", handleKeyPress);
 	}
 
 	
