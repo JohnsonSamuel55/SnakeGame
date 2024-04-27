@@ -107,7 +107,6 @@ function collided(){
         const distance = Math.sqrt((circle2.x - circle1.x) ** 2 + (circle2.y - circle1.y) ** 2);
         // Sum of the radii of the circles
         const sumRadii = circle1.radius + circle2.radius;
-    
         // If the distance between the centers is less than or equal to the sum of the radii, they overlap
         return distance <= sumRadii;
     }
@@ -149,16 +148,16 @@ function collided(){
             if(clientAlive){
                 //If the client's head overlaps with any part of another snake
                 for(let otherId in activeClients){
-                    if(activeClients[otherId].id !== activeClients[clientId].id){
+                    if(otherId !== clientId){
                         let circles = activeClients[otherId].player.circles;
-                        for( let circle in circles){
+                        for( let circle of circles){
                             let circle2 = {
                                 x: circle.center.x,
                                 y: circle.center.y,
                                 radius: activeClients[otherId].player.size / 2,
                                 type: circle.type
                             };
-                            if (!activeClients[clientId].player.invinsible && circlesOverlap(circle1, circle2)){
+                            if (!activeClients[clientId].player.isInvinsible && circlesOverlap(circle1, circle2)){
                                 activeClients[clientId].player.alive = false;
                                 for(let id in activeClients){ 
                                     activeClients[id].socket.emit(NetworkIds.UPDATE_DEATH, {
@@ -224,7 +223,8 @@ function updateClients(elapsedTime) {
             clientId: clientId,
             lastMessageId: client.lastMessageId,
             circles: client.player.circles,
-            updateWindow: lastUpdate
+            updateWindow: lastUpdate,
+            score: client.player.score
         };
         if (client.player.reportUpdate){
             client.socket.emit(NetworkIds.UPDATE_SELF, update);

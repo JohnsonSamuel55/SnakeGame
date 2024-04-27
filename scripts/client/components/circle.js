@@ -3,7 +3,7 @@ MyGame.components.Circle = function() {
   let center = {x: 0, y: 0};
   let direction = MyGame.directions.EAST;
   let turnPoints = [];
-  let buffer = 0.0025;
+  let buffer = 0.004;
 
   Object.defineProperty(that, 'center', {
     get: () => center

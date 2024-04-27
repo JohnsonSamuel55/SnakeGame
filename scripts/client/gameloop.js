@@ -157,6 +157,7 @@ MyGame.main = (function(graphics, renderer, input, components, systems) {
 
   function updatePlayerSelf(data) {
     playerSelf.model.circles = data.circles;
+    playerSelf.model.score = data.score;
     graphics.updateViewport({x: data.circles[0].center.x - (1 / 6), y: data.circles[0].center.y - (1 / 6)})
   }
 
@@ -185,6 +186,7 @@ MyGame.main = (function(graphics, renderer, input, components, systems) {
   function updatePlayerDeath(data) {
     if (data.clientId == playerSelf.model.id) {
       playerSelf.model.alive = false;
+      showGameOverMessage(playerSelf.model.score, 0, 1);
     }
     else {
       playerOthers[data.clientId].model.alive = false;
@@ -287,9 +289,14 @@ MyGame.main = (function(graphics, renderer, input, components, systems) {
         localStorage.setItem('CONTROL_KEYS_RIGHT', 39);
         localStorage.setItem('CONTROL_KEYS_DOWN', 40);
       }      
-      for (let i = 0; i < 9; i++) {
-        for (let j = 0; j < 9; j++) {
-          backgrounds.push(components.Background({center: {x: j / 9, y: i / 9}, texture: MyGame.assets['background']}));
+      for (let i = 0; i < 12; i++) {
+        for (let j = 0; j < 12; j++) {
+          if (i < 1 || i > 10 || j < 1 || j > 10) {
+            backgrounds.push(components.Background({center: {x: j / 11, y: i / 11}, texture: MyGame.assets['black']}));
+          }
+          else {
+            backgrounds.push(components.Background({center: {x: j / 11, y: i / 11}, texture: MyGame.assets['background']}));
+          }
         }
       }
       
@@ -321,6 +328,7 @@ MyGame.main = (function(graphics, renderer, input, components, systems) {
         keysDown.push(e.keyCode)
       }
     }
+
     if (listsEqual(keysDown, [up])) {
       newMessage = NetworkIds.INPUT_NORTH;
     }
@@ -351,6 +359,48 @@ MyGame.main = (function(graphics, renderer, input, components, systems) {
     let remove = keysDown.indexOf(e.keyCode);
     if (remove !== -1) {
       keysDown.splice(remove, 1);
+    }
+
+    let left = localStorage.getItem('CONTROL_KEYS_LEFT');
+    let up = localStorage.getItem('CONTROL_KEYS_UP');
+    let right = localStorage.getItem('CONTROL_KEYS_RIGHT');
+    let down = localStorage.getItem('CONTROL_KEYS_DOWN');
+
+    function listsEqual(arr1, arr2) {
+      if (arr1.length !== arr2.length) {
+        return false;
+      }
+
+      let equal = false;
+      arr1.forEach((value, index) => {
+        equal = value == arr2[index];
+      });
+      return equal;
+    }
+
+    if (listsEqual(keysDown, [up])) {
+      newMessage = NetworkIds.INPUT_NORTH;
+    }
+    else if (listsEqual(keysDown, [right])) {
+      newMessage = NetworkIds.INPUT_EAST;
+    }
+    else if (listsEqual(keysDown, [down])) {
+      newMessage = NetworkIds.INPUT_SOUTH;
+    }
+    else if (listsEqual(keysDown, [left])) {
+      newMessage = NetworkIds.INPUT_WEST;
+    }
+    else if (listsEqual(keysDown, [up, right]) || listsEqual(keysDown, [right, up])) {
+      newMessage = NetworkIds.INPUT_NORTHEAST;
+    }
+    else if (listsEqual(keysDown, [up, left]) || listsEqual(keysDown, [left, up])) {
+      newMessage = NetworkIds.INPUT_NORTHWEST;
+    }
+    else if (listsEqual(keysDown, [down, right]) || listsEqual(keysDown, [right, down])) {
+      newMessage = NetworkIds.INPUT_SOUTHEAST;
+    }
+    else if (listsEqual(keysDown, [down, left]) || listsEqual(keysDown, [left, down])) {
+      newMessage = NetworkIds.INPUT_SOUTHWEST;
     }
   });
 
