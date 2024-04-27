@@ -6,7 +6,7 @@ let Circle = require('./circle');
 let Food = require('./food')
 let Directions = require('../shared/directions')
 
-const SIMULATION_UPDATE_RATE_MS = 10;
+const SIMULATION_UPDATE_RATE_MS = 1;
 const STATE_UPDATE_RATE_MS = 100;
 const MAX_FOOD = 150;
 let foodId = 0;
@@ -30,22 +30,47 @@ function processInput(elapsedTime) {
         let input = processMe.dequeue();
         let client = activeClients[input.clientId];
         client.lastMessageId = input.message.id;
+        let head = client.player.circles[0];
         switch (input.message.type) {
             case NetworkIds.INPUT_EAST: 
+                if (head.direction !== Directions.WEST) {
+                    client.player.updateDirection(Directions.EAST);
+                }
                 break;
             case NetworkIds.INPUT_NORTHEAST:
+                if (head.direction !== Directions.SOUTHWEST) {
+                    client.player.updateDirection(Directions.NORTHEAST);
+                }
                 break;
             case NetworkIds.INPUT_NORTH:
+                if (head.direction !== Directions.SOUTH) {
+                    client.player.updateDirection(Directions.NORTH);
+                }
                 break;
             case NetworkIds.INPUT_NORTHWEST:
+                if (head.direction !== Directions.SOUTHEAST) {
+                    client.player.updateDirection(Directions.NORTHWEST);
+                }
                 break;
             case NetworkIds.INPUT_WEST:
+                if (head.direction !== Directions.EAST) {
+                    client.player.updateDirection(Directions.WEST);
+                }
                 break;
             case NetworkIds.INPUT_SOUTHWEST:
+                if (head.direction !== Directions.NORTHEAST) {
+                    client.player.updateDirection(Directions.SOUTHWEST);
+                }
                 break;
             case NetworkIds.INPUT_SOUTH:
+                if (head.direction !== Directions.NORTH) {
+                    client.player.updateDirection(Directions.SOUTH);
+                }
                 break;
             case NetworkIds.INPUT_SOUTHEAST:
+                if (head.direction !== Directions.NORTHWEST) {
+                    client.player.updateDirection(Directions.SOUTHEAST);
+                }
                 break;
         }
     }

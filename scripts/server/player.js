@@ -43,9 +43,9 @@ function createPlayer() {
       speed: 0.0001
     }));
     isInvinsible = true;
-    for (let i = 0; i < 5; i++) {
-      circles[i].turnPoints.push({center: {x: .5, y: .5}, directionAfter: Directions.NORTH});
-    }
+    // for (let i = 0; i < 5; i++) {
+    //   circles[i].turnPoints.push({center: {x: .5, y: .5}, directionAfter: Directions.NORTH});
+    // }
   }
 
   function setName(newName) {
@@ -75,9 +75,16 @@ function createPlayer() {
       if (invinsibleTimer <= 0) {
         isInvinsible = false;
       }
-      for (let circle of circles) {
-        circle.update(elapsedTime);
+      for (let circle in circles) {
+        circles[circle].update(elapsedTime, circle);
       }
+    }
+  }
+
+  function updateDirection(newDirection) {
+    circles[0].direction = newDirection;
+    for (let i = 1; i < circles.length; i++) {
+      circles[i].turnPoints.push({center: {x: circles[0].center.x, y: circles[0].center.y}, directionAfter: newDirection});
     }
   }
 
@@ -86,6 +93,7 @@ function createPlayer() {
     increaseScore,
     update,
     spawn,
+    updateDirection,
     get score() { return score; },
     get circles() { return circles; },
     get id() { return id; },

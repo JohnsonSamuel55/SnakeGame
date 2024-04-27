@@ -8,6 +8,7 @@ MyGame.main = (function(graphics, renderer, input, components, systems) {
 
   let lastTimeStamp = performance.now(),
       backgrounds = [],
+      keysDown = [],
       myKeyboard = input.Keyboard(),
       playerOthers = {},
       playerSelf = {
@@ -15,6 +16,7 @@ MyGame.main = (function(graphics, renderer, input, components, systems) {
         textures: [MyGame.assets['head'], MyGame.assets['body'], MyGame.assets['tail']]
       },
       messageHistory = Queue.create(),
+      newMessage,
       messageId = 1,
       socket = io(),
       networkQueue = Queue.create(),
@@ -188,6 +190,15 @@ MyGame.main = (function(graphics, renderer, input, components, systems) {
 
     //Double buffering the queue to avoid asynchronously receiving
     //messages while processing
+    if (!!newMessage) {
+      console.log(newMessage);
+      socket.emit(NetworkIds.INPUT, {
+        id: messageId++,
+        elapsedTime: elapsedTime,
+        type: newMessage
+      });
+    }
+    newMessage = null;
     let processMe = networkQueue;
     networkQueue = networkQueue = Queue.create();
     while(!processMe.empty){
@@ -274,6 +285,62 @@ MyGame.main = (function(graphics, renderer, input, components, systems) {
       // Get the game loop started
       requestAnimationFrame(gameLoop);
   }
+
+  window.addEventListener("keydown", (e) => {
+    let left = localStorage.getItem('CONTROL_KEYS_LEFT');
+    let up = localStorage.getItem('CONTROL_KEYS_UP');
+    let right = localStorage.getItem('CONTROL_KEYS_RIGHT');
+    let down = localStorage.getItem('CONTROL_KEYS_DOWN');
+
+    function listsEqual(arr1, arr2) {
+      if (arr1.length !== arr2.length) {
+        return false;
+      }
+
+      let equal = false;
+      arr1.forEach((value, index) => {
+        equal = value == arr2[index];
+      });
+      return equal;
+    }
+
+    if (e.keyCode == left || e.keyCode == right || e.keyCode == up || e.keyCode == down) {
+      if (keysDown.indexOf(e.keyCode) === -1) {
+        keysDown.push(e.keyCode)
+      }
+    }
+    if (listsEqual(keysDown, [up])) {
+      newMessage = NetworkIds.INPUT_NORTH;
+    }
+    else if (listsEqual(keysDown, [right])) {
+      newMessage = NetworkIds.INPUT_EAST;
+    }
+    else if (listsEqual(keysDown, [down])) {
+      newMessage = NetworkIds.INPUT_SOUTH;
+    }
+    else if (listsEqual(keysDown, [left])) {
+      newMessage = NetworkIds.INPUT_WEST;
+    }
+    else if (listsEqual(keysDown, [up, right]) || listsEqual(keysDown, [right, up])) {
+      newMessage = NetworkIds.INPUT_NORTHEAST;
+    }
+    else if (listsEqual(keysDown, [up, left]) || listsEqual(keysDown, [left, up])) {
+      newMessage = NetworkIds.INPUT_NORTHWEST;
+    }
+    else if (listsEqual(keysDown, [down, right]) || listsEqual(keysDown, [right, down])) {
+      newMessage = NetworkIds.INPUT_SOUTHEAST;
+    }
+    else if (listsEqual(keysDown, [down, left]) || listsEqual(keysDown, [left, down])) {
+      newMessage = NetworkIds.INPUT_SOUTHWEST;
+    }
+  });
+
+  window.addEventListener("keyup", (e) => {
+    let remove = keysDown.indexOf(e.keyCode);
+    if (remove !== -1) {
+      keysDown.splice(remove, 1);
+    }
+  });
 
   return {
       initialize: initialize

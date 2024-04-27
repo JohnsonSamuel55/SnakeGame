@@ -6,14 +6,15 @@ function circle(spec) {
   let type = spec.type;
   let direction = spec.direction;
   let speed = spec.speed;
-  let buffer = 0.0025;
+  let buffer = 0.002;
 
-  function update(elapsedTime) {
+  function update(elapsedTime, index) {
     if (turnPoints.length > 0) {
       let turnPoint = turnPoints[turnPoints.length - 1];
       let distance = Math.sqrt((center.x - turnPoint.center.x) ** 2 + (center.y - turnPoint.center.y) ** 2);
       if (distance < buffer) {
         direction = turnPoints[turnPoints.length - 1].directionAfter;
+        console.log(direction);
         turnPoints.shift();
       }
     }
@@ -31,6 +32,7 @@ function circle(spec) {
     get center() { return center; },
     get type() { return type; },
     get direction() { return direction; },
+    set direction(value) { direction = value; },
     get turnPoints() { return turnPoints; }
   }
 }
