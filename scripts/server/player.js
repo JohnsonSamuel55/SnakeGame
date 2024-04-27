@@ -19,7 +19,7 @@ function createPlayer() {
   let speed = 0.00005
 
   function spawn() {
-    let center = {x: .25, y: .5};
+    let center = {x: random.nextRange(10, 90) / 100, y: random.nextRange(10, 90) / 100};
     circles.push(Circle.create({
         center: {x: center.x, y: center.y},
         type: CircleTypes.HEAD,

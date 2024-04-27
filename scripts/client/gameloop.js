@@ -163,6 +163,11 @@ MyGame.main = (function(graphics, renderer, input, components, systems) {
   function updatePlayerOther(data){
     //Check that the player is in the playerOthers array
     //Then update based on data from server
+    if (playerOthers.hasOwnProperty(data.clientId)) {
+      console.log("updating other player")
+      let model = playerOthers[data.clientId].model;
+      model.state.circles = data.circles;
+    }
   }
 
   function addNewFood(data) {
