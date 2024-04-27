@@ -307,21 +307,8 @@ function handleControlsButtonClick() {
 
 		// Function to handle the escape key press
 		function handleKeyPress(event) {
-			if (event.keyCode === 27) { // Check if the pressed key is the Escape key
-				// Hide the game screen
-				document.getElementById("gameCanvas").style.display = "none";
-	
-				// Show each button
-				var buttons = document.querySelectorAll("#mainMenu button");
-				buttons.forEach(function(button) {
-				button.style.display = ""; // Sets display property to default (block or inline-block)
-				});
-
-	
-				// Remove the event listener
-				document.removeEventListener("keydown", handleKeyPress);
-			}
-			if(event.keyCode === 80) {
+			
+			if(event.keyCode === 27) {
 				showGameOverMessage(1, 2, 3);
 				
 			}
@@ -435,16 +422,15 @@ function handleControlsButtonClick() {
 			buttons.forEach(function(button) {
 			button.style.display = ""; // Sets display property to default (block or inline-block)
 			});
+			window.location.reload();
 		});
 	}
 
 	document.addEventListener("keydown", function(event) {
 		if (event.keyCode === 27 && document.getElementById("nameInputScreen").style.display === "block") {
-			// Your code here
-			// For example, you can hide the nameInputScreen:
+			
 			document.getElementById("nameInputScreen").style.display = "none";
 			handleStartButtonClick();
 		}
 	});
-	
 	
