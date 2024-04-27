@@ -6,7 +6,7 @@ function circle(spec) {
   let type = spec.type;
   let direction = spec.direction;
   let speed = spec.speed;
-  let buffer = 0.002;
+  let buffer = 0.003;
 
   function update(elapsedTime, index) {
     if (turnPoints.length > 0) {
@@ -14,7 +14,6 @@ function circle(spec) {
       let distance = Math.sqrt((center.x - turnPoint.center.x) ** 2 + (center.y - turnPoint.center.y) ** 2);
       if (distance < buffer) {
         direction = turnPoints[turnPoints.length - 1].directionAfter;
-        console.log(direction);
         turnPoints.shift();
       }
     }
