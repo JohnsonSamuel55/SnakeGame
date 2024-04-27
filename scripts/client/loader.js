@@ -37,7 +37,9 @@ MyGame.loader = function() {
             message: 'Rendering loaded',
             onComplete: null
         }, {
-            scrpts: ['systems/particle-system']
+            scripts: ['systems/particle-system'],
+            message: "Systems Loaded",
+            onComplete: null
         } 
         ,{
             scripts: ['gameloop'],
