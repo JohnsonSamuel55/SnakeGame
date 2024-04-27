@@ -32,8 +32,6 @@
         <input type="text" id="rightKey" class="control-key-input" readonly onclick="setControlKey('rightKey')"><br>
         <label for="downKey">Down:</label>
         <input type="text" id="downKey" class="control-key-input" readonly onclick="setControlKey('downKey')"><br>
-        <label for="pauseKey">Pause:</label>
-        <input type="text" id="pauseKey" class="control-key-input" readonly onclick="setControlKey('pauseKey')"><br>
         <button id="saveControlsButton">Save</button>
     </div>
     <div id = "highScoresScreen" style="display: none;">
@@ -48,6 +46,11 @@
             <p>Highest Position: <span id="gameOverPosition"></span></p>
             <button id="restartButton">Main Menu</button>
         </div>
+    </div>
+    <div id="nameInputScreen" style="display: none;">
+        <h2>Enter Your Name</h2>
+        <input type="text" id="nameInput" placeholder="Your Name">
+        <button onclick="next()">Next</button>
     </div>
     
     <!--<script src="viewport.js"></script>-->
